@@ -22,10 +22,8 @@ This plugin contains miscellaneous utilities, mainly operations.
   * Example of use with a Javascript chain:
 
 ```
-// Chain input: blob
-// Chain output: blob
+// Chain input: blob, chain output: blob
 function run(input, params) {
-  
   // No parameter passed, get the info in nxlabs_ImageInfo
   Labs.PictureGetInfo(null, {});
   /*
@@ -34,9 +32,7 @@ function run(input, params) {
     ctx.nxlabs_ImageInfo.colorSpace (ex.: "sRGB")
     ctx.nxlabs_ImageInfo.depth, ctx.nxlabs_ImageInfo.width, ctx.nxlabs_ImageInfo.height
   */
-  
   return input;
-
 }
 ```
 
