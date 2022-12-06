@@ -114,13 +114,14 @@ public class TestPictureOperations {
         doc = session.createDocumentModel("/", "testDoc", "Picture");
         doc.setPropertyValue("file:content", (Serializable) input);
         doc = session.createDocument(doc);
-        // Wait for default view to be computed
+        // Wait for default views to be computed
         transactionalFeature.nextTransaction();
         // Check they were computed
         doc.refresh();
         assertNotNull(doc.getPropertyValue("picture:views"));
         MultiviewPictureAdapter adapter = new MultiviewPictureAdapter(doc);
         assertNotNull(adapter);
+        assertTrue(adapter.getViews().length != 0);
 
         OperationContext ctx = new OperationContext(session);
         ctx.setInput(input);
@@ -130,8 +131,7 @@ public class TestPictureOperations {
         params.put("fileName", "new-view-" + input.getFilename());
         params.put("description", "the description");
         params.put("saveDoc", true);
-        automationService.run(ctx, PictureAddToViews.ID, params);
-        doc.refresh();
+        doc = (DocumentModel) automationService.run(ctx, PictureAddToViews.ID, params);
         adapter = new MultiviewPictureAdapter(doc);
         PictureView view = adapter.getView("new-view");
         assertNotNull(view);
