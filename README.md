@@ -9,8 +9,10 @@ This plugin contains miscellaneous utilities, mainly operations.
   * Conversion > Labs.PictureGetInfo
   * Conversion > Labs.AddToViews
   * Conversion > Labs.RemoveFromViews
+  * Conversion > Labs.PictureCrop
+  * Conversion > Labs.PictureRotate
 * Operations on Videos
-  * . . .
+  * Conversion > Labs.VideoGetInfo
 * Misc. Operations
   * Services > Labs.GetServerLog
 
