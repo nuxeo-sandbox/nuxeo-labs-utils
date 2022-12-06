@@ -5,6 +5,13 @@
 ## Description
 This plugin contains miscellaneous utilities, mainly operations.
 
+* Operations on Images
+  * Conversion > Labs.PictureGetInfo
+* Operations on Videos
+  * . . .
+* Misc. Operations
+  * Services > Labs.GetServerLog
+
 
 ## List of Operations
 
