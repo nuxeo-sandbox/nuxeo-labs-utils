@@ -13,9 +13,7 @@ This plugin contains miscellaneous utilities, mainly operations.
   * Services > Labs.GetServerLog
 
 
-## List of Operations
-
-### Operations on Images
+## Operations on Images
 * `Conversion > Labs.PictureGetInfo`
   * Receives a blob as parameter, this blob must contain a Picture
   * Set a Context Variable (see below) with the `ImageInfo` Java structure for the input blob. It can be used as is to read the format, colorSpace, width, height and depth
@@ -43,9 +41,10 @@ function run(input, params) {
 ```
 
 
-### Operations on Videos
+## Operations on Videos
+[TBD]
 
-### Misc. Operations
+## Misc. Operations
 * `Services > Labs.GetServerLog`
   * Input: `void`
   * Returns a `blob`, the current server.log file zipped
@@ -54,7 +53,7 @@ function run(input, params) {
 
 
 
-# Support
+## Support
 
 **These features are not part of the Nuxeo Production platform.**
 
@@ -63,11 +62,11 @@ These solutions are provided for inspiration and we encourage customers to use t
 This is a moving project (no API maintenance, no deprecation process, etc.) If any of these solutions are found to be useful for the Nuxeo Platform in general, they will be integrated directly into platform, not maintained here.
 
 
-# Licensing
+## Licensing
 
 [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0)
 
 
-# About Nuxeo
+## About Nuxeo
 
 [Nuxeo](www.nuxeo.com), developer of the leading Content Services Platform, is reinventing enterprise content management (ECM) and digital asset management (DAM). Nuxeo is fundamentally changing how people work with data and content to realize new value from digital information. Its cloud-native platform has been deployed by large enterprises, mid-sized businesses and government agencies worldwide. Customers like Verizon, Electronic Arts, ABN Amro, and the Department of Defense have used Nuxeo's technology to transform the way they do business. Founded in 2008, the company is based in New York with offices across the United States, Europe, and Asia.
