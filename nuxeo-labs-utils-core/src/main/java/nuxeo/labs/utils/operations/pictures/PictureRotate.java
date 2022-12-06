@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2022 Hyland (http://hyland.com/)  and others.
+ * (C) Copyright 2022 Hyland (http://hyland.com/) and others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,8 +18,8 @@
  */
 package nuxeo.labs.utils.operations.pictures;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.nuxeo.ecm.automation.OperationContext;
 import org.nuxeo.ecm.automation.core.Constants;
 import org.nuxeo.ecm.automation.core.annotations.Context;
 import org.nuxeo.ecm.automation.core.annotations.Operation;
@@ -29,35 +29,33 @@ import org.nuxeo.ecm.core.api.Blob;
 import org.nuxeo.ecm.platform.picture.api.ImagingService;
 
 /**
- * Return the ImageInfo in a context variable
+ * Resizes an image using the default platform service
  * 
  * @since 2021.27
  */
-@Operation(id = PictureGetInfo.ID, category = Constants.CAT_CONVERSION, label = "Get Picture Infos", description = "Get input blob info, returns it in the varName Context variable. If varName is not passed, use nxlabs_ImageInfo. This context variable contains a Java PictureGetInfo, with width, height, format, colorSpace and depth fields.")
-public class PictureGetInfo {
+@Operation(id = PictureRotate.ID, category = Constants.CAT_CONVERSION, label = "Rotate Picture", description = "Rotate the input blob using the platform default ImagingComponent. "
+        + "angle is a required integer")
+public class PictureRotate {
 
-    public static final String ID = "Labs.PictureGetInfo";
-
-    protected static final String DEFAULT_CONTEXT_VAR_NAME = "nxlabs_ImageInfo";
-
-    @Context
-    protected OperationContext ctx;
+    public static final String ID = "Labs.PictureRotate";
 
     @Context
     protected ImagingService imagingService;
 
-    @Param(name = "varName", required = false)
-    protected String varName;
+    @Param(name = "angle", required = true)
+    protected Integer angle;
 
     @OperationMethod
     public Blob run(Blob input) {
 
-        if (StringUtils.isEmpty(varName)) {
-            varName = DEFAULT_CONTEXT_VAR_NAME;
+        Blob rotated = imagingService.rotate(input, angle);
+        // It often returns a blob with a .null extension...
+        String fileName = rotated.getFilename();
+        String ext = FilenameUtils.getExtension(fileName);
+        if (StringUtils.isBlank(ext) || "null".equals(ext)) {
+            rotated.setFilename(input.getFilename());
         }
 
-        ctx.put(varName, imagingService.getImageInfo(input));
-
-        return input;
+        return rotated;
     }
 }

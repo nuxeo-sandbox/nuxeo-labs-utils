@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2022 Hyland (http://hyland.com/)  and others.
+ * (C) Copyright 2022 Hyland (http://hyland.com/) and others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,8 +18,6 @@
  */
 package nuxeo.labs.utils.operations.pictures;
 
-import org.apache.commons.lang3.StringUtils;
-import org.nuxeo.ecm.automation.OperationContext;
 import org.nuxeo.ecm.automation.core.Constants;
 import org.nuxeo.ecm.automation.core.annotations.Context;
 import org.nuxeo.ecm.automation.core.annotations.Operation;
@@ -29,35 +27,36 @@ import org.nuxeo.ecm.core.api.Blob;
 import org.nuxeo.ecm.platform.picture.api.ImagingService;
 
 /**
- * Return the ImageInfo in a context variable
+ * Crop an image using the default platform service
  * 
  * @since 2021.27
  */
-@Operation(id = PictureGetInfo.ID, category = Constants.CAT_CONVERSION, label = "Get Picture Infos", description = "Get input blob info, returns it in the varName Context variable. If varName is not passed, use nxlabs_ImageInfo. This context variable contains a Java PictureGetInfo, with width, height, format, colorSpace and depth fields.")
-public class PictureGetInfo {
+@Operation(id = PictureCrop.ID, category = Constants.CAT_CONVERSION, label = "Crop Picture", description = "Crop the input blob using the platform default ImagingComponent. "
+        + "top, left width and height are required and integers (pixels)")
+public class PictureCrop {
 
-    public static final String ID = "Labs.PictureGetInfo";
-
-    protected static final String DEFAULT_CONTEXT_VAR_NAME = "nxlabs_ImageInfo";
-
-    @Context
-    protected OperationContext ctx;
+    public static final String ID = "Labs.PictureCrop";
 
     @Context
     protected ImagingService imagingService;
 
-    @Param(name = "varName", required = false)
-    protected String varName;
+    @Param(name = "top", required = true)
+    protected Integer top;
+
+    @Param(name = "left", required = true)
+    protected Integer left;
+
+    @Param(name = "width", required = true)
+    protected Integer width;
+
+    @Param(name = "height", required = true)
+    protected Integer height;
 
     @OperationMethod
     public Blob run(Blob input) {
 
-        if (StringUtils.isEmpty(varName)) {
-            varName = DEFAULT_CONTEXT_VAR_NAME;
-        }
+        Blob cropped = imagingService.crop(input, left, top, width, height);
 
-        ctx.put(varName, imagingService.getImageInfo(input));
-
-        return input;
+        return cropped;
     }
 }

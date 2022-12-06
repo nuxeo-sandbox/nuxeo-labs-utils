@@ -64,6 +64,21 @@ function run(input, params) {
   * Removes the view, save the document if asked, returns the document
     * If the view is not found or if input document does not have the `picture` schema, does nothing 
 
+* `Conversion > Labs.PictureCrop`
+  * Crops the input blob, returns the cropped blob
+  * Parameters
+    * `left`, `top`, `width`, `height`: Integers, required 
+  * Uses the default [Nuxeo `ImagingService`](https://github.com/nuxeo/nuxeo/blob/2021/modules/platform/nuxeo-platform-imaging/nuxeo-platform-imaging-core/src/main/java/org/nuxeo/ecm/platform/picture/api/ImagingService.java) and its related [CommandLine Converter contribution](https://github.com/nuxeo/nuxeo/blob/2021/modules/platform/nuxeo-platform-imaging/nuxeo-platform-imaging-core/src/main/resources/OSGI-INF/commandline-imagemagick-contrib.xml) to ImageMagick.
+
+* `Conversion > Labs.PictureRotate`
+  * Rotates the input blob, returns the rotated blob
+  * Parameters
+    * `angle`: Integer, required
+  * Uses the default [Nuxeo `ImagingService`](https://github.com/nuxeo/nuxeo/blob/2021/modules/platform/nuxeo-platform-imaging/nuxeo-platform-imaging-core/src/main/java/org/nuxeo/ecm/platform/picture/api/ImagingService.java) and its related [CommandLine Converter contribution](https://github.com/nuxeo/nuxeo/blob/2021/modules/platform/nuxeo-platform-imaging/nuxeo-platform-imaging-core/src/main/resources/OSGI-INF/commandline-imagemagick-contrib.xml) to ImageMagick.
+
+
+
+
 
 ## Operations on Videos
 [TBD]

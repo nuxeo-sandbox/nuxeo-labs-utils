@@ -6,6 +6,8 @@
     <operation class="nuxeo.labs.utils.operations.pictures.PictureGetInfo" />
     <operation class="nuxeo.labs.utils.operations.pictures.PictureAddToViews" />
     <operation class="nuxeo.labs.utils.operations.pictures.PictureRemoveFromViews" />
+    <operation class="nuxeo.labs.utils.operations.pictures.PictureCrop" />
+    <operation class="nuxeo.labs.utils.operations.pictures.PictureRotate" />
   </extension>
   
   <extension target="org.nuxeo.ecm.automation.server.AutomationServer" point="bindings">

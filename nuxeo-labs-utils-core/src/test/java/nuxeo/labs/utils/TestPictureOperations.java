@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2022 Nuxeo (http://nuxeo.com/) and others.
+ * (C) Copyright 2022 Hyland (http://hyland.com/)  and others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,6 +46,7 @@ import org.nuxeo.ecm.core.test.DefaultRepositoryInit;
 import org.nuxeo.ecm.core.test.annotations.Granularity;
 import org.nuxeo.ecm.core.test.annotations.RepositoryConfig;
 import org.nuxeo.ecm.platform.picture.api.ImageInfo;
+import org.nuxeo.ecm.platform.picture.api.ImagingService;
 import org.nuxeo.ecm.platform.picture.api.PictureView;
 import org.nuxeo.ecm.platform.picture.api.adapters.MultiviewPictureAdapter;
 import org.nuxeo.runtime.test.runner.Deploy;
@@ -54,8 +55,10 @@ import org.nuxeo.runtime.test.runner.FeaturesRunner;
 import org.nuxeo.runtime.test.runner.TransactionalFeature;
 
 import nuxeo.labs.utils.operations.pictures.PictureAddToViews;
+import nuxeo.labs.utils.operations.pictures.PictureCrop;
 import nuxeo.labs.utils.operations.pictures.PictureGetInfo;
 import nuxeo.labs.utils.operations.pictures.PictureRemoveFromViews;
+import nuxeo.labs.utils.operations.pictures.PictureRotate;
 
 /**
  *
@@ -77,6 +80,9 @@ public class TestPictureOperations {
 
     @Inject
     protected AutomationService automationService;
+
+    @Inject
+    protected ImagingService imagingService;
 
     @Inject
     protected TransactionalFeature transactionalFeature;
@@ -196,6 +202,50 @@ public class TestPictureOperations {
         doc = (DocumentModel) automationService.run(ctx, PictureRemoveFromViews.ID, params);
         adapter = new MultiviewPictureAdapter(doc);
         assertNull(adapter.getView("Small"));
+        
+    }
+    
+    @Test
+    public void shouldCropImage() throws Exception {
+        
+        Blob input = createBlobFromTestImage();
+
+        OperationContext ctx = new OperationContext(session);
+        ctx.setInput(input);
+        Map<String, Object> params = new HashMap<>();
+        params.put("top", 10);
+        params.put("left", 10);
+        params.put("width", 100);
+        params.put("height", 110);
+        Blob cropped = (Blob) automationService.run(ctx, PictureCrop.ID, params);
+        ImageInfo ii = imagingService.getImageInfo(cropped);
+        assertEquals(ii.getWidth(), 100);
+        assertEquals(ii.getHeight(), 110);
+        
+    }
+    
+    @Test
+    public void shouldRotateAnImage() throws Exception {
+        
+        Blob input = createBlobFromTestImage();
+
+        ImageInfo ii = imagingService.getImageInfo(input);
+        int originalW = ii.getWidth();
+        int originalH = ii.getHeight();
+        // Just for the sake of this test, W and H must be different
+        assertTrue(originalW != originalH);
+
+        OperationContext ctx = new OperationContext(session);
+        ctx.setInput(input);
+        Map<String, Object> params = new HashMap<>();
+        params.put("angle", 90);
+        Blob rotated = (Blob) automationService.run(ctx, PictureRotate.ID, params);
+        ii = imagingService.getImageInfo(rotated);
+        int newW = ii.getWidth();
+        int newH = ii.getHeight();
+        
+        assertEquals(originalW, newH);
+        assertEquals(originalH, newW);
         
     }
 }
