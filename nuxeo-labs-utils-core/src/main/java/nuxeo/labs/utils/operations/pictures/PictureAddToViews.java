@@ -19,7 +19,6 @@
 package nuxeo.labs.utils.operations.pictures;
 
 import org.apache.commons.lang3.StringUtils;
-import org.nuxeo.ecm.automation.OperationContext;
 import org.nuxeo.ecm.automation.core.Constants;
 import org.nuxeo.ecm.automation.core.annotations.Context;
 import org.nuxeo.ecm.automation.core.annotations.Operation;
@@ -28,7 +27,6 @@ import org.nuxeo.ecm.automation.core.annotations.Param;
 import org.nuxeo.ecm.core.api.Blob;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
-import org.nuxeo.ecm.core.api.DocumentRef;
 import org.nuxeo.ecm.platform.picture.api.ImageInfo;
 import org.nuxeo.ecm.platform.picture.api.ImagingService;
 import org.nuxeo.ecm.platform.picture.api.PictureView;
@@ -40,7 +38,7 @@ import org.nuxeo.ecm.platform.picture.api.adapters.MultiviewPicture;
  * 
  * @since 2021.27
  */
-@Operation(id = PictureAddToViews.ID, category = Constants.CAT_CONVERSION, label = "Add blob to picture:views", description = ""
+@Operation(id = PictureAddToViews.ID, category = Constants.CAT_DOCUMENT, label = "Add blob to picture:views", description = ""
         + "Add a new view (viewName) to the picture:views field of the document referenced by the document parameter (id or path). "
         + "If viewName already exists, it is replaced. If fileName is not passed, the blob's file name is used. "
         + "If the document does not have the picture schema, the operation does nothing. "
@@ -72,13 +70,13 @@ public class PictureAddToViews {
 
     @OperationMethod
     public DocumentModel run(Blob input) {
-        
-        if(doc.hasSchema("picture")) {
-            
-            if(StringUtils.isEmpty((fileName))) {
+
+        if (doc.hasSchema("picture")) {
+
+            if (StringUtils.isEmpty((fileName))) {
                 fileName = input.getFilename();
             }
-            
+
             ImageInfo info = imagingService.getImageInfo(input);
             PictureView view = new PictureViewImpl();
             view.setBlob(input);
@@ -88,15 +86,15 @@ public class PictureAddToViews {
             view.setImageInfo(info);
             view.setTitle(viewName);
             view.setWidth(info.getWidth());
-            
+
             MultiviewPicture mvp = doc.getAdapter(MultiviewPicture.class);
             mvp.addView(view);
-            
-            if(saveDoc) {
+
+            if (saveDoc) {
                 doc = session.saveDocument(doc);
             }
         }
-        
+
         return doc;
     }
 }

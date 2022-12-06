@@ -7,6 +7,8 @@ This plugin contains miscellaneous utilities, mainly operations.
 
 * Operations on Images
   * Conversion > Labs.PictureGetInfo
+  * Conversion > Labs.AddToViews
+  * Conversion > Labs.RemoveFromViews
 * Operations on Videos
   * . . .
 * Misc. Operations
@@ -35,6 +37,32 @@ function run(input, params) {
   return input;
 }
 ```
+
+* `Document > Labs.PictureAddToViews`
+  * Add a blob to the `picture:views` field, with all the required info (width, height, format, …)
+  * Input: Blob
+  * Output: Document
+  * Parameters
+    * `document`: String, required, the id or path of the document
+    * `viewName`: String, required, the name of the view. If a view of the same name already exists, it is replaced.
+    * `saveDocument`: Boolean, optional, false by default
+    * `description`: String, optional
+    * `fileName`: String, optional. If fileName is not passed, the blob's file name is used
+  * The operation gets the ImageInfo of the input blob and adds it to the `picture:views` schema, after getting the image info (width, height, format, colorSpace, depth). If `saveDocument` is true, the document is saved.
+  * If a rendition of the same name already exists, it is replaced 
+  * Return the document with its `picture:views` modified
+  * If the document does not have the picture schema, the operation does nothing
+
+
+* `Document > Labs.PictureRemoveFromViews`
+  * Remove an entry from `picture:views`
+  * Input: Document
+  * Output: Document
+  * Parameters
+    * `viewName`: String, required, the view to remove, case insensitive
+    * saveDocument: Boolean, optional, false by default
+  * Removes the view, save the document if asked, returns the document
+    * If the view is not found or if input document does not have the `picture` schema, does nothing 
 
 
 ## Operations on Videos

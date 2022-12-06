@@ -20,6 +20,7 @@ package nuxeo.labs.utils;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -54,7 +55,7 @@ import org.nuxeo.runtime.test.runner.TransactionalFeature;
 
 import nuxeo.labs.utils.operations.pictures.PictureAddToViews;
 import nuxeo.labs.utils.operations.pictures.PictureGetInfo;
-
+import nuxeo.labs.utils.operations.pictures.PictureRemoveFromViews;
 
 /**
  *
@@ -79,12 +80,43 @@ public class TestPictureOperations {
 
     @Inject
     protected TransactionalFeature transactionalFeature;
+    
+    protected Blob createBlobFromTestImage() throws IOException {
+        File f = FileUtils.getResourceFileFromContext(TEST_IMAGE_FILE);
+        Blob blob = Blobs.createBlob(f, "image/jpeg");
+        
+        return blob;
+    }
+
+    protected DocumentModel createPictureWithTestImage(Blob imageBlob, boolean checkViewsAreCalculated) throws IOException {
+
+        // Get the test file and create a Picture document with it
+        if(imageBlob == null) {
+          imageBlob = createBlobFromTestImage();
+        }
+
+        DocumentModel doc;
+        doc = session.createDocumentModel("/", "testDoc", "Picture");
+        doc.setPropertyValue("file:content", (Serializable) imageBlob);
+        doc = session.createDocument(doc);
+        // Wait for default views to be computed
+        transactionalFeature.nextTransaction();
+        doc.refresh();
+
+        if (checkViewsAreCalculated) {
+            assertNotNull(doc.getPropertyValue("picture:views"));
+            MultiviewPictureAdapter adapter = new MultiviewPictureAdapter(doc);
+            assertNotNull(adapter);
+            assertTrue(adapter.getViews().length != 0);
+        }
+
+        return doc;
+    }
 
     @Test
     public void shouldGetPictureInfo() throws OperationException, IOException {
 
-        File f = FileUtils.getResourceFileFromContext(TEST_IMAGE_FILE);
-        Blob input = Blobs.createBlob(f, "image/jpeg");
+        Blob input = createBlobFromTestImage();
 
         OperationContext ctx = new OperationContext(session);
         ctx.setInput(input);
@@ -102,20 +134,13 @@ public class TestPictureOperations {
         assertEquals(ii.getWidth(), 1024);
         assertEquals(ii.getHeight(), 768);
     }
-    
+
     @Test
     public void shouldAddtoView() throws IOException, OperationException {
         
-        // Get the test file and create a Picture document with it
-        File f = FileUtils.getResourceFileFromContext(TEST_IMAGE_FILE);
-        Blob input = Blobs.createBlob(f, "image/jpeg");
+        Blob input = createBlobFromTestImage();
+        DocumentModel doc = createPictureWithTestImage(input, true);
         
-        DocumentModel doc;
-        doc = session.createDocumentModel("/", "testDoc", "Picture");
-        doc.setPropertyValue("file:content", (Serializable) input);
-        doc = session.createDocument(doc);
-        // Wait for default views to be computed
-        transactionalFeature.nextTransaction();
         // Check they were computed
         doc.refresh();
         assertNotNull(doc.getPropertyValue("picture:views"));
@@ -136,6 +161,41 @@ public class TestPictureOperations {
         PictureView view = adapter.getView("new-view");
         assertNotNull(view);
         assertEquals(input.getDigest(), view.getBlob().getDigest());
+        
+    }
+
+    @Test
+    public void shouldRemoveFromViewWithSave() throws OperationException, IOException {
+        
+        DocumentModel doc = createPictureWithTestImage(null, true);
+        MultiviewPictureAdapter adapter = new MultiviewPictureAdapter(doc);
+        assertNotNull(adapter.getView("Small")); // One of the default rendition
+        
+        OperationContext ctx = new OperationContext(session);
+        ctx.setInput(doc);
+        Map<String, Object> params = new HashMap<>();
+        params.put("viewName", "Small");
+        params.put("saveDoc", true);
+        doc = (DocumentModel) automationService.run(ctx, PictureRemoveFromViews.ID, params);
+        adapter = new MultiviewPictureAdapter(doc);
+        assertNull(adapter.getView("Small"));
+        
+    }
+
+    @Test
+    public void shouldRemoveFromViewCaseInsensitive() throws OperationException, IOException {
+        
+        DocumentModel doc = createPictureWithTestImage(null, true);
+        MultiviewPictureAdapter adapter = new MultiviewPictureAdapter(doc);
+        assertNotNull(adapter.getView("Small")); // One of the default rendition
+        
+        OperationContext ctx = new OperationContext(session);
+        ctx.setInput(doc);
+        Map<String, Object> params = new HashMap<>();
+        params.put("viewName", "SMALL");
+        doc = (DocumentModel) automationService.run(ctx, PictureRemoveFromViews.ID, params);
+        adapter = new MultiviewPictureAdapter(doc);
+        assertNull(adapter.getView("Small"));
         
     }
 }

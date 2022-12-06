@@ -5,6 +5,7 @@
     <operation class="nuxeo.labs.utils.operations.GetServerLog" />
     <operation class="nuxeo.labs.utils.operations.pictures.PictureGetInfo" />
     <operation class="nuxeo.labs.utils.operations.pictures.PictureAddToViews" />
+    <operation class="nuxeo.labs.utils.operations.pictures.PictureRemoveFromViews" />
   </extension>
   
   <extension target="org.nuxeo.ecm.automation.server.AutomationServer" point="bindings">
