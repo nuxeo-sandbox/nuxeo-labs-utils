@@ -81,7 +81,35 @@ function run(input, params) {
 
 
 ## Operations on Videos
-[TBD]
+
+* `Conversion > Labs.VideoGetInfo`
+  * Set the `blobVideoInfo` context variable with the `VideoInfo` Java object for the input video blob
+  * input: `blob`
+  * Output: `blob`, the input blob, unchanged
+  * Once called, info about the video is accessible via the `blobVideoInfo` Context Variable. In a JS automation, for example, you could use:
+
+```
+// Chain input: blob, chain output: blob
+function run(input, params) {
+  Labs.VideoGetInfo(null, {});
+  /*
+  Now, we could use
+    ctx.blobVideoInfo.width
+    ctx.blobVideoInfo.height
+    ctx.blobVideoInfo.format (a string, like "mov,mp4,m4a,3gp,3g2,mj2")
+    ctx.blobVideoInfo.duration
+    ctx.blobVideoInfo.frameRate
+    ctx.blobVideoInfo.streams is an array of objects. Each stream contains (example, for first item):
+      ctx.blobVideoInfo.streams[0].type
+      ctx.blobVideoInfo.streams[0].codec
+      ctx.blobVideoInfo.streams[0].streamInfo
+      ctx.blobVideoInfo.streams[0].bitRate
+  */
+  return input;
+}
+```
+
+
 
 ## Misc. Operations
 * `Services > Labs.GetServerLog`
