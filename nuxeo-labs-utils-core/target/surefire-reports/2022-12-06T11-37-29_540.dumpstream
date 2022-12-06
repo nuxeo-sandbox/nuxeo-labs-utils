@@ -1,0 +1,15 @@
+# Created at 2022-12-06T11:37:37.971
+WARNING: An illegal reflective access operation has occurred
+
+# Created at 2022-12-06T11:37:37.971
+WARNING: Illegal reflective access using Lookup on net.openhft.chronicle.core.Jvm (file:/Users/thibaud/.m2/repository/net/openhft/chronicle-core/2.20.21/chronicle-core-2.20.21.jar) to class java.lang.reflect.AccessibleObject
+
+# Created at 2022-12-06T11:37:37.972
+WARNING: Please consider reporting this to the maintainers of net.openhft.chronicle.core.Jvm
+
+# Created at 2022-12-06T11:37:37.972
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+
+# Created at 2022-12-06T11:37:37.972
+WARNING: All illegal access operations will be denied in a future release
+

@@ -4,6 +4,7 @@
   <extension point="operations" target="org.nuxeo.ecm.core.operation.OperationServiceComponent">
     <operation class="nuxeo.labs.utils.operations.GetServerLog" />
     <operation class="nuxeo.labs.utils.operations.pictures.PictureGetInfo" />
+    <operation class="nuxeo.labs.utils.operations.pictures.PictureAddToViews" />
   </extension>
   
   <extension target="org.nuxeo.ecm.automation.server.AutomationServer" point="bindings">
