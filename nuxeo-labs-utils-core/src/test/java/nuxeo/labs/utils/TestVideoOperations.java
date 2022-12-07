@@ -20,12 +20,15 @@ package nuxeo.labs.utils;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.nuxeo.ecm.platform.video.VideoConstants.TRANSCODED_VIDEOS_PROPERTY;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -53,6 +56,7 @@ import org.nuxeo.runtime.test.runner.TransactionalFeature;
 
 import nuxeo.labs.utils.operations.videos.VideoAddToTranscodedVideos;
 import nuxeo.labs.utils.operations.videos.VideoGetInfo;
+import nuxeo.labs.utils.operations.videos.VideoRemoveFromTranscodedVideos;
 
 /**
  *
@@ -60,10 +64,11 @@ import nuxeo.labs.utils.operations.videos.VideoGetInfo;
 @RunWith(FeaturesRunner.class)
 @Features(AutomationFeature.class)
 @RepositoryConfig(init = DefaultRepositoryInit.class, cleanup = Granularity.METHOD)
-@Deploy("nuxeo.labs.utils.nuxeo-labs-utils-core")
 @Deploy("org.nuxeo.ecm.platform.commandline.executor")
+@Deploy("org.nuxeo.ecm.platform.picture.core")
 @Deploy("org.nuxeo.ecm.platform.video")
 @Deploy("org.nuxeo.ecm.platform.tag")
+@Deploy("org.nuxeo.ecm.platform.types")
 @Deploy("nuxeo.labs.utils.nuxeo-labs-utils-core")
 public class TestVideoOperations {
 
@@ -84,7 +89,7 @@ public class TestVideoOperations {
     
     protected Blob createBlobFromTestVideo() throws IOException {
         File f = FileUtils.getResourceFileFromContext(TEST_VIDEO_FILE);
-        Blob blob = Blobs.createBlob(f, "image/jpeg");
+        Blob blob = Blobs.createBlob(f, "video/mp4");
         
         return blob;
     }
@@ -136,10 +141,11 @@ public class TestVideoOperations {
     }
     
     @Test
+    @Deploy("org.nuxeo.ecm.platform.video:test-video-conversions-enabled.xml")
     public void shouldAddToTranscodedVideos() throws Exception {
 
         Blob input = createBlobFromTestVideo();
-        DocumentModel doc = createVideoWithTestVideo(input, false);
+        DocumentModel doc = createVideoWithTestVideo(input, true);
 
         OperationContext ctx = new OperationContext(session);
         ctx.setInput(input);
@@ -147,12 +153,10 @@ public class TestVideoOperations {
         params.put("document", doc.getId());
         params.put("renditionName", "new-rendition");
         params.put("saveDoc", "true");
-        
-        doc = session.saveDocument(doc);
         doc = (DocumentModel) automationService.run(ctx, VideoAddToTranscodedVideos.ID, params);
         
         VideoDocumentAdapter adapter = new VideoDocumentAdapter(doc);
-        assertNotNull(doc);
+        assertNotNull(adapter);
         TranscodedVideo transcodedVideo = adapter.getTranscodedVideo("new-rendition");
         assertNotNull(transcodedVideo);
         assertEquals(transcodedVideo.getName(), "new-rendition");
@@ -162,6 +166,29 @@ public class TestVideoOperations {
         assertEquals(transcodedVideo.getWidth(), TEST_WIDTH);
         assertEquals(transcodedVideo.getHeight(), TEST_HEIGHT);
         assertTrue(transcodedVideo.getFormat().indexOf("mov") > -1 && transcodedVideo.getFormat().indexOf("mp4") > -1);
+        
+    }
+    
+    @Test
+    public void shouldRemoveATranscodedVideo() throws Exception {
+
+        DocumentModel doc = createVideoWithTestVideo(null, true);
+        
+        // Check we do have the mp4 automatic conversion
+        VideoDocumentAdapter adapter = new VideoDocumentAdapter(doc);
+        assertNotNull(adapter.getTranscodedVideo("MP4 480p"));
+
+        // Remove it
+        OperationContext ctx = new OperationContext(session);
+        ctx.setInput(doc);
+        Map<String, Object> params = new HashMap<>();
+        params.put("renditionName", "MP4 480p");
+        params.put("saveDoc", "true");
+        doc = (DocumentModel) automationService.run(ctx, VideoRemoveFromTranscodedVideos.ID, params);
+        
+        // Check
+        adapter = new VideoDocumentAdapter(doc);
+        assertNull(adapter.getTranscodedVideo("MP4 480p"));
         
     }
 }

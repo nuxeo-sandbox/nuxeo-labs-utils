@@ -66,7 +66,6 @@ import nuxeo.labs.utils.operations.pictures.PictureRotate;
 @RunWith(FeaturesRunner.class)
 @Features(AutomationFeature.class)
 @RepositoryConfig(init = DefaultRepositoryInit.class, cleanup = Granularity.METHOD)
-@Deploy("nuxeo.labs.utils.nuxeo-labs-utils-core")
 @Deploy("org.nuxeo.ecm.platform.commandline.executor")
 @Deploy("org.nuxeo.ecm.platform.picture.core")
 @Deploy("org.nuxeo.ecm.platform.tag")

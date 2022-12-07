@@ -12,6 +12,7 @@
     <!--  Videos -->
     <operation class="nuxeo.labs.utils.operations.videos.VideoGetInfo" />
     <operation class="nuxeo.labs.utils.operations.videos.VideoAddToTranscodedVideos" />
+    <operation class="nuxeo.labs.utils.operations.videos.VideoRemoveFromTranscodedVideos" />
   </extension>
   
   <extension target="org.nuxeo.ecm.automation.server.AutomationServer" point="bindings">

@@ -14,6 +14,7 @@ This plugin contains miscellaneous utilities, mainly operations.
 * Operations on Videos
   * Conversion > Labs.VideoGetInfo
   * Document > Labs.VideoAddToTranscodedVideos
+  * Document > Labs.VideoRemoveFromTranscodedVideos
 * Misc. Operations
   * Services > Labs.GetServerLog
 
@@ -118,12 +119,21 @@ function run(input, params) {
   * Output: `document`, the modified document
   * Parameters
     * `document`: String, required, the id or path of the document
-    * `renditionName`: The name of the rendition to store
+    * `renditionName`: String, required, the name of the rendition to store
     * `saveDoc`: Boolean, optional, false by default
   * The operation gets the `VideoInfo` of the input blob and adds it to the `vid:transcodedVideos` schema, after getting the `VideoInfo` (width, height, format, streams, …). If `saveDocu` is true, the document is saved.
-  * If a rendition of the same name already exists, it is replaced 
+  * If a rendition of the same name already exists (case sensitive), it is replaced.
   * Return the document with its `vid:transcodedVideos` modified
-  * If the document does not have the `video` schema, the operation does nothing
+  * If the document does not have the `video` schema, or if rendition is not found, the operation does nothing
+
+* `Document > Labs.VideoRemoveFromTranscodedVideos`
+  * Remove an entry from `vid:transcodedVideos`
+  * Input: `document`
+  * Output: `document`
+  * Parameters:
+    * `renditionName`: String, required, the name of the rendition to remove
+    * `saveDoc`: Boolean, optional, `false` by default
+  * Remove `renditionName` (case sensitive) from vid:transcodedVideos, returns the modified input document, saved if `saveDoc` is `true`. If `renditionName` is not found or if the input document does not have the `video` schema, the operation does nothing and returns the input document unchanged.
 
 
 
