@@ -7,12 +7,13 @@ This plugin contains miscellaneous utilities, mainly operations.
 
 * Operations on Images
   * Conversion > Labs.PictureGetInfo
-  * Conversion > Labs.AddToViews
-  * Conversion > Labs.RemoveFromViews
+  * Document > Labs.AddToViews
+  * Document > Labs.RemoveFromViews
   * Conversion > Labs.PictureCrop
   * Conversion > Labs.PictureRotate
 * Operations on Videos
   * Conversion > Labs.VideoGetInfo
+  * Document > Labs.VideoAddToTranscodedVideos
 * Misc. Operations
   * Services > Labs.GetServerLog
 
@@ -47,13 +48,13 @@ function run(input, params) {
   * Parameters
     * `document`: String, required, the id or path of the document
     * `viewName`: String, required, the name of the view. If a view of the same name already exists, it is replaced.
-    * `saveDocument`: Boolean, optional, false by default
+    * `saveDoc`: Boolean, optional, false by default
     * `description`: String, optional
     * `fileName`: String, optional. If fileName is not passed, the blob's file name is used
-  * The operation gets the ImageInfo of the input blob and adds it to the `picture:views` schema, after getting the image info (width, height, format, colorSpace, depth). If `saveDocument` is true, the document is saved.
+  * The operation gets the ImageInfo of the input blob and adds it to the `picture:views` schema, after getting the image info (width, height, format, colorSpace, depth). If `saveDoc` is true, the document is saved.
   * If a rendition of the same name already exists, it is replaced 
   * Return the document with its `picture:views` modified
-  * If the document does not have the picture schema, the operation does nothing
+  * If the document does not have the `picture` schema, the operation does nothing
 
 
 * `Document > Labs.PictureRemoveFromViews`
@@ -62,7 +63,7 @@ function run(input, params) {
   * Output: Document
   * Parameters
     * `viewName`: String, required, the view to remove, case insensitive
-    * saveDocument: Boolean, optional, false by default
+    * `saveDoc`: Boolean, optional, false by default
   * Removes the view, save the document if asked, returns the document
     * If the view is not found or if input document does not have the `picture` schema, does nothing 
 
@@ -110,6 +111,19 @@ function run(input, params) {
   return input;
 }
 ```
+
+* `Document > Labs.VideoAddToTranscodedVideos`
+  * Add a new video rendition to the `vid:transcodedVideos` field, with all the required info (width, height, streams, …)
+  * Input: `blob`, the video to add
+  * Output: `document`, the modified document
+  * Parameters
+    * `document`: String, required, the id or path of the document
+    * `renditionName`: The name of the rendition to store
+    * `saveDoc`: Boolean, optional, false by default
+  * The operation gets the `VideoInfo` of the input blob and adds it to the `vid:transcodedVideos` schema, after getting the `VideoInfo` (width, height, format, streams, …). If `saveDocu` is true, the document is saved.
+  * If a rendition of the same name already exists, it is replaced 
+  * Return the document with its `vid:transcodedVideos` modified
+  * If the document does not have the `video` schema, the operation does nothing
 
 
 
