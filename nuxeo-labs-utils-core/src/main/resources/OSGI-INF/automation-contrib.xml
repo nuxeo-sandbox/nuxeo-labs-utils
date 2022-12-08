@@ -21,7 +21,7 @@
 
   <!-- Automation Helpers -->
   <extension target="org.nuxeo.ecm.core.operation.OperationServiceComponent" point="contextHelpers">
-    <contextHelper id="NxLabs" class="nuxeo.labs.utils.automation.helpers.NxLabs" />
+    <contextHelper id="NxLabs" class="nuxeo.labs.utils.automationhelpers.NxLabs" />
   </extension>
   
   <!-- Web filtering (resricting operation(s)) -->

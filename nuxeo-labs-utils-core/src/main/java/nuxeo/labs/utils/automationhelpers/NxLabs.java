@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2016 Nuxeo SA (http://nuxeo.com/) and others.
+ * (C) Copyright 2022 Hyland (http://hyland.com/)  and others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,47 +16,98 @@
  * Contributors:
  *     Thibaud Arguillere
  */
-package org.nuxeo.labs.automation.helpers;
+package nuxeo.labs.utils.automationhelpers;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.nuxeo.ecm.automation.context.ContextHelper;
-import org.nuxeo.ecm.core.api.Blob;
-import org.nuxeo.ecm.core.api.Blobs;
+import org.nuxeo.ecm.core.api.NuxeoPrincipal;
+import org.nuxeo.ecm.platform.usermanager.UserManager;
+import org.nuxeo.runtime.api.Framework;
+import org.nuxeo.runtime.transaction.TransactionHelper;
 
 /**
- * A set of Automation functions to handle files on disk (we are server side in all cases).
- * <p>
- * The original purpose of these helpers was to be able to quickly create/handle demo data from JavaScript Automation,
- * just creating a few hundred of documents and avoiding creating a Java plug-in, the marketplace package, installing in
- * the test server, etc.
- * <p>
- * <b>IMPORTANT WARNING ABOUT SECURITY</b><br/>
- * The helpers, by essence, run server side of course. And some helpers here can create/write/delete files and/or
- * folders => <b>MAKE SURE YOU DON't ALLOW EXTERNAL CALLS TO ACCESS FILES/FOLDERS OF YOUR SERVER</b><br/>
- * A helper cannot be called directly by itself, it must be used inside an operation, inside an Automation Chain.<br/>
- * So: please BE VERY CAREFUL, and hard code your values, and/or make sure the paths cannot be get/set from a REST call.
- * Typical example of very, very wrong way of using these helpers would be a chain that accepts a "path" parameter, and
- * call FileUtils.deleteFile() with this path for example. Don't do that.
- * <p>
+ * A set of Automation functions to handle misc utilities, small functions
+ * that regularly are missing and require more JS or workarounds.
  * 
- * @since 7.4
+ * @since 2021.27
  */
 public class NxLabs implements ContextHelper {
 
     /**
-     * Load the whole content of the file and return the corresponding blob
+     * Returns the file extension for a given path, using org.apache.commons.io.FilenameUtils:
+     *    foo.txt      --> "txt"
+     *    a/b/c.jpg    --> "jpg"
+     *    a/b.txt/c    --> ""
+     *    a/b/c        --> ""
      * 
-     * @param inPath
-     * @return
+     * @param path
+     * @return the file extension
      * @throws IOException
-     * @since 7.4
+     * @since 2021.27
      */
-    public void blahBlah() {
+    public String getFileExtension(String path) {
+        
+        return FilenameUtils.getExtension(path);
+    }
+    
+    /**
+     * Returns the file extension for a given path, using org.apache.commons.io.FilenameUtils:
+     *    a/b/c.txt --> c
+     *    a.txt     --> a
+     *    a/b/c     --> c
+     *    a/b/c/    --> ""
+     * 
+     * @param path
+     * @return the file extension
+     * @throws IOException
+     * @since 2021.27
+     */
+    public String getBaseName(String path) {
+        
+        return FilenameUtils.getBaseName(path);
+    }
+    
+    /**
+     * returns First name + " " + Last name.
+     * HAadle cases where there is no first name and/or no last name (return then the userId)
+     * 
+     * @param userId
+     * @return the user full name
+     * @since 2021.27
+     */
+    public String getUserFullName(String userId) {
+        
+        UserManager userManager = Framework.getService(UserManager.class);
+        NuxeoPrincipal pcipal = userManager.getPrincipal(userId);
+        
+        String fullName = "";
+        String firstName = pcipal.getFirstName();
+        String lastName = pcipal.getLastName();
+        
+        if(StringUtils.isNotBlank(firstName)) {
+            fullName = firstName;
+        }
+        
+        if(StringUtils.isNotBlank(lastName)) {
+          if(StringUtils.isNotBlank(firstName)) {
+              fullName += " ";
+          }
+          fullName += lastName;
+        }
+        
+        return fullName;
+    }
+    
+    /**
+     * Commit current transaction, starts a new one.
+     * Useful in a loop, when modifying/saving a lot of documents.
+     * 
+     * @since 2021.27
+     */
+    public void commitAndStartTransaction() {
+        TransactionHelper.commitOrRollbackTransaction();
+        TransactionHelper.startTransaction();
     }
 
 
