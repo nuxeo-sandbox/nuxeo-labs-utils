@@ -80,6 +80,9 @@ public class NxLabs implements ContextHelper {
         
         UserManager userManager = Framework.getService(UserManager.class);
         NuxeoPrincipal pcipal = userManager.getPrincipal(userId);
+        if(pcipal == null) {
+            return "";
+        }
         
         String fullName = "";
         String firstName = pcipal.getFirstName();
@@ -94,6 +97,10 @@ public class NxLabs implements ContextHelper {
               fullName += " ";
           }
           fullName += lastName;
+        }
+        
+        if(StringUtils.isBlank(fullName)) {
+            fullName = userId;
         }
         
         return fullName;

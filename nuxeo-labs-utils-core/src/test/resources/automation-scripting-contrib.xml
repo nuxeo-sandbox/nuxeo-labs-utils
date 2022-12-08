@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<component name="nuxeo-labs-automation-helpers-test-tot">
+
+  <extension target="org.nuxeo.automation.scripting.internals.AutomationScriptingComponent" point="operation">
+
+    <scriptedOperation id="TestHelpers.GetFileExtension">
+       <inputType>void</inputType>
+       <outputType>string</outputType>
+       <category>Scripting</category>
+       <param name="path" type="string"/>
+
+       <script>
+         function run(input, params) {
+           return NxLabs.getFileExtension(params.path);
+         }
+       </script>
+    </scriptedOperation>
+    
+    <scriptedOperation id="TestHelpers.GetBaseName">
+       <inputType>void</inputType>
+       <outputType>string</outputType>
+       <category>Scripting</category>
+       <param name="path" type="string"/>
+
+       <script>
+         function run(input, params) {
+           return NxLabs.getBaseName(params.path);
+         }
+       </script>
+    </scriptedOperation>
+    
+    <scriptedOperation id="TestHelpers.GetUserFullName">
+       <inputType>void</inputType>
+       <outputType>string</outputType>
+       <category>Scripting</category>
+       <param name="userId" type="string"/>
+
+       <script>
+         function run(input, params) {
+           return NxLabs.getUserFullName(params.userId);
+         }
+       </script>
+    </scriptedOperation>
+
+  </extension>
+
+</component>
