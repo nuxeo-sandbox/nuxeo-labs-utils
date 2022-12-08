@@ -40,7 +40,7 @@ This plugin contains miscellaneous utilities, mainly operations.
 // Chain input: blob, chain output: blob
 function run(input, params) {
   // No parameter passed, get the info in nxlabs_ImageInfo
-  Labs.PictureGetInfo(null, {});
+  Labs.PictureGetInfo(input, {});
   /*
   Now, we could use
     ctx.nxlabs_ImageInfo.format (ex.: "JPEG", "PNG", ...)
