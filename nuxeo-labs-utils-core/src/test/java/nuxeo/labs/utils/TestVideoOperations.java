@@ -138,7 +138,7 @@ public class TestVideoOperations {
     }
     
     @Test
-    @Deploy("org.nuxeo.ecm.platform.video:test-video-conversions-enabled.xml")
+    @Deploy("nuxeo.labs.utils.nuxeo-labs-utils-core:test-video-conversions-enabled.xml")
     public void shouldAddToTranscodedVideos() throws Exception {
 
         Blob input = createBlobFromTestVideo();

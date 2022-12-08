@@ -18,7 +18,7 @@ This plugin contains miscellaneous utilities, mainly operations.
 * Operations on Blobs
   * Conversion > Labs.BlobGetMimeType
 * Operations on Documents
-  * Conversion > Labs.DocumentGetThumbnail
+  * Document > Labs.DocumentGetThumbnail
 * Misc. Operations
   * Services > Labs.GetServerLog
 
@@ -149,6 +149,14 @@ function run(input, params) {
   * Output: `blob`
   * Set the `nxlabs_mimetype` context variable with the mime type of the input blob, and returns the input blob unchanged.
   * (This is a simple wrapper for `org.nuxeo.ecm.platform.mimetype.interfaces.MimetypeRegistry#getMimetypeFromBlob`)
+
+
+## Operations on Documents
+* `Document > Labs.DocumentGetThumbnail`
+  * Return the thumbnail for the input document
+  * Input: `document`
+  * Output: `blob`
+  * Use the `ThumbnailService` (`org.nuxeo.ecm.core.api.Blob.ThumbnailService#getThumbnail`) to return the thumbnail of the input document, whatever its type.
 
 
 ## Misc. Operations

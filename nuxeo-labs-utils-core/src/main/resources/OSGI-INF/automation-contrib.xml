@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <component name="nuxeo.labs.utils.operations">
-
+  <!-- Operations -->
   <extension point="operations" target="org.nuxeo.ecm.core.operation.OperationServiceComponent">
     <operation class="nuxeo.labs.utils.operations.GetServerLog" />
     <!--  Images -->
@@ -15,8 +15,16 @@
     <operation class="nuxeo.labs.utils.operations.videos.VideoRemoveFromTranscodedVideos" />
     <!--  Blobs -->
     <operation class="nuxeo.labs.utils.operations.blobs.BlobGetMimeType" />
+    <!--  Documents -->
+    <operation class="nuxeo.labs.utils.operations.documents.DocumentGetThumbnail" />
+  </extension>
+
+  <!-- Automation Helpers -->
+  <extension target="org.nuxeo.ecm.core.operation.OperationServiceComponent" point="contextHelpers">
+    <contextHelper id="NxLabs" class="nuxeo.labs.utils.automation.helpers.NxLabs" />
   </extension>
   
+  <!-- Web filtering (resricting operation(s)) -->
   <extension target="org.nuxeo.ecm.automation.server.AutomationServer" point="bindings">
     <binding name="Labs.GetServerLog" chain="false">
       <groups>administrators</groups>

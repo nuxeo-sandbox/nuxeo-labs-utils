@@ -23,9 +23,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,13 +31,11 @@ import javax.inject.Inject;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.nuxeo.common.utils.FileUtils;
 import org.nuxeo.ecm.automation.AutomationService;
 import org.nuxeo.ecm.automation.OperationContext;
 import org.nuxeo.ecm.automation.OperationException;
 import org.nuxeo.ecm.automation.test.AutomationFeature;
 import org.nuxeo.ecm.core.api.Blob;
-import org.nuxeo.ecm.core.api.Blobs;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.test.DefaultRepositoryInit;
@@ -84,44 +80,12 @@ public class TestPictureOperations {
     protected ImagingService imagingService;
 
     @Inject
-    protected TransactionalFeature transactionalFeature;
-    
-    protected Blob createBlobFromTestImage() throws IOException {
-        File f = FileUtils.getResourceFileFromContext(TEST_IMAGE_FILE);
-        Blob blob = Blobs.createBlob(f, "image/jpeg");
-        
-        return blob;
-    }
-
-    protected DocumentModel createPictureWithTestImage(Blob imageBlob, boolean checkViewsAreCalculated) throws IOException {
-
-        // Get the test file and create a Picture document with it
-        if(imageBlob == null) {
-          imageBlob = createBlobFromTestImage();
-        }
-
-        DocumentModel doc;
-        doc = session.createDocumentModel("/", "testDoc", "Picture");
-        doc.setPropertyValue("file:content", (Serializable) imageBlob);
-        doc = session.createDocument(doc);
-        // Wait for default views to be computed
-        transactionalFeature.nextTransaction();
-        doc.refresh();
-
-        if (checkViewsAreCalculated) {
-            assertNotNull(doc.getPropertyValue("picture:views"));
-            MultiviewPictureAdapter adapter = new MultiviewPictureAdapter(doc);
-            assertNotNull(adapter);
-            assertTrue(adapter.getViews().length != 0);
-        }
-
-        return doc;
-    }
+    protected TransactionalFeature txFeature;
 
     @Test
-    public void shouldGetPictureInfo() throws OperationException, IOException {
+    public void shouldGetPictureInfo() throws Exception {
 
-        Blob input = createBlobFromTestImage();
+        Blob input = TestUtils.createBlobFromTestImage();
 
         OperationContext ctx = new OperationContext(session);
         ctx.setInput(input);
@@ -141,8 +105,8 @@ public class TestPictureOperations {
     @Test
     public void shouldAddtoView() throws IOException, OperationException {
         
-        Blob input = createBlobFromTestImage();
-        DocumentModel doc = createPictureWithTestImage(input, true);
+        Blob input = TestUtils.createBlobFromTestImage();
+        DocumentModel doc = TestUtils.createPictureWithTestImage(session, txFeature, input, true);
         
         // Check they were computed
         doc.refresh();
@@ -170,7 +134,7 @@ public class TestPictureOperations {
     @Test
     public void shouldRemoveFromViewWithSave() throws OperationException, IOException {
         
-        DocumentModel doc = createPictureWithTestImage(null, true);
+        DocumentModel doc = TestUtils.createPictureWithTestImage(session, txFeature, null, true);
         MultiviewPictureAdapter adapter = new MultiviewPictureAdapter(doc);
         assertNotNull(adapter.getView("Small")); // One of the default rendition
         
@@ -188,7 +152,7 @@ public class TestPictureOperations {
     @Test
     public void shouldRemoveFromViewCaseInsensitive() throws OperationException, IOException {
         
-        DocumentModel doc = createPictureWithTestImage(null, true);
+        DocumentModel doc = TestUtils.createPictureWithTestImage(session, txFeature, null, true);
         MultiviewPictureAdapter adapter = new MultiviewPictureAdapter(doc);
         assertNotNull(adapter.getView("Small")); // One of the default rendition
         
@@ -205,7 +169,7 @@ public class TestPictureOperations {
     @Test
     public void shouldCropImage() throws Exception {
         
-        Blob input = createBlobFromTestImage();
+        Blob input = TestUtils.createBlobFromTestImage();
 
         OperationContext ctx = new OperationContext(session);
         ctx.setInput(input);
@@ -224,7 +188,7 @@ public class TestPictureOperations {
     @Test
     public void shouldRotateAnImage() throws Exception {
         
-        Blob input = createBlobFromTestImage();
+        Blob input = TestUtils.createBlobFromTestImage();
 
         ImageInfo ii = imagingService.getImageInfo(input);
         int originalW = ii.getWidth();
