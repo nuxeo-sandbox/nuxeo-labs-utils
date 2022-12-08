@@ -15,6 +15,10 @@ This plugin contains miscellaneous utilities, mainly operations.
   * Conversion > Labs.VideoGetInfo
   * Document > Labs.VideoAddToTranscodedVideos
   * Document > Labs.VideoRemoveFromTranscodedVideos
+* Operations on Blobs
+  * Conversion > Labs.BlobGetMimeType
+* Operations on Documents
+  * Conversion > Labs.DocumentGetThumbnail
 * Misc. Operations
   * Services > Labs.GetServerLog
 
@@ -22,9 +26,9 @@ This plugin contains miscellaneous utilities, mainly operations.
 ## Operations on Images
 * `Conversion > Labs.PictureGetInfo`
   * Receives a blob as parameter, this blob must contain a Picture
-  * Set a Context Variable (see below) with the `ImageInfo` Java structure for the input blob. It can be used as is to read the format, colorSpace, width, height and depth
+  * Set the `nxlabs_ImageInfo` Context Variable with the `ImageInfo` Java structure for the input blob. It can be used as is to read the format, colorSpace, width, height and depth
   * Returns the input blob unchanged
-  * Parameter: `varName`, string, Optional. The name of a Context Variable to fill with the value. If not passed, fills the `nxlabs_ImageInfo` Context Variable with the `ImageInfo`.
+  * (his is a simple wrapper for `org.nuxeo.ecm.platform.picture.api.ImagingService#getImageInfo`)
   * Example of use with a Javascript chain:
 
 ```
@@ -82,15 +86,15 @@ function run(input, params) {
 
 
 
-
-
 ## Operations on Videos
 
 * `Conversion > Labs.VideoGetInfo`
-  * Set the `blobVideoInfo` context variable with the `VideoInfo` Java object for the input video blob
+  * Set the `nxlabs_blobVideoInfo` context variable with the `VideoInfo` Java object for the input video blob
   * input: `blob`
   * Output: `blob`, the input blob, unchanged
-  * Once called, info about the video is accessible via the `blobVideoInfo` Context Variable. In a JS automation, for example, you could use:
+  * Once called, info about the video is accessible via the `blobVideoInfo` Context Variable.
+  * (This is a simple wrapper for `org.nuxeo.ecm.platform.video.VideoHelper#getVideoInfo`)
+  * In a JS automation, for example, you could use:
 
 ```
 // Chain input: blob, chain output: blob
@@ -98,16 +102,16 @@ function run(input, params) {
   Labs.VideoGetInfo(null, {});
   /*
   Now, we could use
-    ctx.blobVideoInfo.width
-    ctx.blobVideoInfo.height
-    ctx.blobVideoInfo.format (a string, like "mov,mp4,m4a,3gp,3g2,mj2")
-    ctx.blobVideoInfo.duration
-    ctx.blobVideoInfo.frameRate
-    ctx.blobVideoInfo.streams is an array of objects. Each stream contains (example, for first item):
-      ctx.blobVideoInfo.streams[0].type
-      ctx.blobVideoInfo.streams[0].codec
-      ctx.blobVideoInfo.streams[0].streamInfo
-      ctx.blobVideoInfo.streams[0].bitRate
+    ctx.nxlabs_blobVideoInfo.width
+    ctx.nxlabs_blobVideoInfo.height
+    ctx.nxlabs_blobVideoInfo.format (a string, like "mov,mp4,m4a,3gp,3g2,mj2")
+    ctx.nxlabs_blobVideoInfo.duration
+    ctx.nxlabs_blobVideoInfo.frameRate
+    ctx.nxlabs_blobVideoInfo.streams is an array of objects. Each stream contains (example, for first item):
+      ctx.nxlabs_blobVideoInfo.streams[0].type
+      ctx.nxlabs_blobVideoInfo.streams[0].codec
+      ctx.nxlabs_blobVideoInfo.streams[0].streamInfo
+      ctx.nxlabs_blobVideoInfo.streams[0].bitRate
   */
   return input;
 }
@@ -135,6 +139,16 @@ function run(input, params) {
     * `saveDoc`: Boolean, optional, `false` by default
   * Remove `renditionName` (case sensitive) from vid:transcodedVideos, returns the modified input document, saved if `saveDoc` is `true`. If `renditionName` is not found or if the input document does not have the `video` schema, the operation does nothing and returns the input document unchanged.
 
+
+
+
+## Operations on Blobs
+* `Conversion > Labs.BlobGetMimeType`
+  * Return the mimetype of the input blob in the `nxlabs_mimetype` context variable
+  * Input: `blob`
+  * Output: `blob`
+  * Set the `nxlabs_mimetype` context variable with the mime type of the input blob, and returns the input blob unchanged.
+  * (This is a simple wrapper for `org.nuxeo.ecm.platform.mimetype.interfaces.MimetypeRegistry#getMimetypeFromBlob`)
 
 
 ## Misc. Operations

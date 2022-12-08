@@ -66,8 +66,8 @@ public class VideoRemoveFromTranscodedVideos {
 
     @OperationMethod
     public DocumentModel run(DocumentModel input) {
-        
-        if(!input.hasSchema("video")) {
+
+        if (!input.hasSchema("video")) {
             return input;
         }
 

@@ -71,8 +71,8 @@ public class VideoAddToTranscodedVideos {
 
     @OperationMethod
     public DocumentModel run(Blob input) {
-        
-        if(!doc.hasSchema("video")) {
+
+        if (!doc.hasSchema("video")) {
             return doc;
         }
 

@@ -125,11 +125,9 @@ public class TestPictureOperations {
 
         OperationContext ctx = new OperationContext(session);
         ctx.setInput(input);
-        Map<String, Object> params = new HashMap<>();
-        params.put("varName", "imageInfo");
-        automationService.run(ctx, PictureGetInfo.ID, params);
+        automationService.run(ctx, PictureGetInfo.ID);
 
-        Object o = ctx.get("imageInfo");
+        Object o = ctx.get(PictureGetInfo.CTX_VAR_NAME);
         assertNotNull(o);
         assertTrue(o instanceof ImageInfo);
         ImageInfo ii = (ImageInfo) o;

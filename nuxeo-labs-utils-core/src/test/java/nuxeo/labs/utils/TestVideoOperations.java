@@ -22,13 +22,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.nuxeo.ecm.platform.video.VideoConstants.TRANSCODED_VIDEOS_PROPERTY;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -110,7 +108,6 @@ public class TestVideoOperations {
         doc.refresh();
 
         if (checkRenditionsAreCalculated) {
-            assertNotNull(doc.getPropertyValue("vid:transcodedVideos"));
             VideoDocumentAdapter adapter = new VideoDocumentAdapter(doc);
             assertNotNull(adapter);
             assertTrue(adapter.getTranscodedVideos().size() > 0);
@@ -128,7 +125,7 @@ public class TestVideoOperations {
         ctx.setInput(input);
         automationService.run(ctx, VideoGetInfo.ID);
 
-        Object o = ctx.get("nxlabs_blobVideoInfo");
+        Object o = ctx.get(VideoGetInfo.CTX_VAR_NAME);
         assertNotNull(o);
         assertTrue(o instanceof VideoInfo);
         VideoInfo vi = (VideoInfo) o;

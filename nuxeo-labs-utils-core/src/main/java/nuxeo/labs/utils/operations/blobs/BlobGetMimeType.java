@@ -16,38 +16,43 @@
  * Contributors:
  *     Thibaud Arguillere
  */
-package nuxeo.labs.utils.operations.pictures;
+package nuxeo.labs.utils.operations.blobs;
 
 import org.nuxeo.ecm.automation.OperationContext;
 import org.nuxeo.ecm.automation.core.Constants;
 import org.nuxeo.ecm.automation.core.annotations.Context;
 import org.nuxeo.ecm.automation.core.annotations.Operation;
 import org.nuxeo.ecm.automation.core.annotations.OperationMethod;
+import org.nuxeo.ecm.automation.core.annotations.Param;
 import org.nuxeo.ecm.core.api.Blob;
-import org.nuxeo.ecm.platform.picture.api.ImagingService;
+import org.nuxeo.ecm.platform.mimetype.interfaces.MimetypeRegistry;
 
 /**
- * Return the ImageInfo in the nxlabs_ImageInfo context variable
+ * Return the mimetype of the input blob in the nxlabs_mimetype context variable
  * 
  * @since 2021.27
  */
-@Operation(id = PictureGetInfo.ID, category = Constants.CAT_CONVERSION, label = "Get Picture Infos", description = "Get input blob info, returns it in the nxlabs_ImageInfo Context variable. This context variable contains a Java PictureGetInfo, with width, height, format, colorSpace and depth fields.")
-public class PictureGetInfo {
+@Operation(id = BlobGetMimeType.ID, category = Constants.CAT_BLOB, label = "Get Blob Mime-Type", description = ""
+        + "Return the mimetype of the input blob inthe nxlabs_mimetype Context Variable. " + "Returns the input blob unchanged.")
+public class BlobGetMimeType {
 
-    public static final String ID = "Labs.PictureGetInfo";
+    public static final String ID = "Labs.BlobGetMimeType";
     
-    public static final String CTX_VAR_NAME = "nxlabs_ImageInfo";
+    public static final String CTX_VAR_NAME = "nxlabs_mimetype";
 
     @Context
     protected OperationContext ctx;
 
     @Context
-    protected ImagingService imagingService;
+    protected MimetypeRegistry mimetypeService;
+
+    @Param(name = "varName", required = false)
+    protected String varName;
 
     @OperationMethod
     public Blob run(Blob input) {
 
-        ctx.put(CTX_VAR_NAME, imagingService.getImageInfo(input));
+        ctx.put(CTX_VAR_NAME, mimetypeService.getMimetypeFromBlob(input));
 
         return input;
     }

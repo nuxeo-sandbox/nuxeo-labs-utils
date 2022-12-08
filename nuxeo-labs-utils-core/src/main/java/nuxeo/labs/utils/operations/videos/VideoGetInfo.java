@@ -32,11 +32,14 @@ import org.nuxeo.ecm.platform.video.VideoInfo;
  * 
  * @since 2021.27
  */
-@Operation(id = VideoGetInfo.ID, category = Constants.CAT_CONVERSION, label = "Get Video Info", description = "Set the blobVideoInfo context variable with the "
-+ "Java VideoInfo about the input blob: width, height, format, duration,frameRate and an array of streams. Returns the input blob unchanged.")
+@Operation(id = VideoGetInfo.ID, category = Constants.CAT_CONVERSION, label = "Get Video Info", description = ""
+        + "Set the nxlabs_blobVideoInfo context variable with the "
+        + "Java VideoInfo about the input blob: width, height, format, duration,frameRate and an array of streams. Returns the input blob unchanged.")
 public class VideoGetInfo {
 
     public static final String ID = "Labs.VideoGetInfo";
+    
+    public static final String CTX_VAR_NAME = "nxlabs_blobVideoInfo";
 
     @Context
     protected OperationContext ctx;
@@ -45,8 +48,8 @@ public class VideoGetInfo {
     public Blob run(Blob input) {
 
         VideoInfo info = VideoHelper.getVideoInfo(input);
-        
-        ctx.put("nxlabs_blobVideoInfo", info);
+
+        ctx.put(CTX_VAR_NAME, info);
 
         return input;
     }
