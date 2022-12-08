@@ -21,6 +21,11 @@ This plugin contains miscellaneous utilities, mainly operations.
   * Document > Labs.DocumentGetThumbnail
 * Misc. Operations
   * Services > Labs.GetServerLog
+* Automation Helpers
+  * NxLabs.getFileEXtension
+  * NxLabs.getBaseName
+  * NxLabs.getUserFullName
+  * NxLabs.commitAndStartTransaction
 
 
 ## Operations on Images
@@ -163,9 +168,51 @@ function run(input, params) {
 * `Services > Labs.GetServerLog`
   * Input: `void`
   * Returns a `blob`, the current server.log file zipped
-  * For security reason, this operation is filtered and can only be ran by users part of the `administrators` group. If you need to change that, you must override the contribution (see operations-contrib.xml in nuxeo-labs-utils-core/src/main/resources/OSGI-INF)
+  * For security reason, this operation is filtered and can only be ran by users part of the `administrators` group. If you need to change that, you must override the contribution (see `operations-contrib.xml` in `nuxeo-labs-utils-core/src/main/resources/OSGI-INF`)
 
 
+## Automation Helpers
+
+These are helpers you can use inside Automation (regular or JS), just like the `Fn` helper. Here is an example with JS:
+
+```
+. . .
+
+var blob = input["file:content"];
+var extension = NxLabs.getFileEXtension(blob.filename);
+var baseName = NxLabs.getBaseName(blob.filename);
+input["dc:title"] = baseName;
+. . .
+```
+
+* `NxLabs.getFileEXtension`
+  * Parameter is a string, a full path.
+  * returns a string, the file extension
+  * This is a wrapper around `org.apache.commons.io.FilenameUtils#getExtension`, it hanldes null values and path with no extension:
+     * foo.txt    --> "txt"
+     * a/b/c.jpg  --> "jpg"
+     * a/b.txt/c  --> ""
+     * a/b/c      --> ""
+
+* `NxLabs.getBaseName`
+  * Parameter is a string, a full path.
+  * returns a string, the base name
+  * This is a wrapper around `org.apache.commons.io.FilenameUtils#getBaseName`, it hanldes null values and invalid path:
+     * a/b/c.txt --> c
+     * a.txt     --> a
+     * a/b/c     --> c
+     * a/b/c/    --> ""
+
+* `NxLabs.getUserFullName`
+  * Parameter is a string, the login of a user.
+  * returns a string, the full name, firstName + " " + lastName
+  * If one the value is empty, does not set the space in between
+  * If both values are not set, returns the login (ex. "Administrator" in a blank new database with Nuxeo out of the box)
+
+* `NxLabs.commitAndStartTransaction`
+  * (No parametes)
+  * Wrapper around the `TransationFeature` class.
+  * Useful when looping and modifying several documents: databases don't like big transactions, so, for example, when looping on 10,000 documents, you want to commit the transaction every 50, 100 documents.
 
 
 ## Support
