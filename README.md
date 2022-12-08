@@ -59,7 +59,7 @@ function run(input, params) {
     * `document`: String, required, the id or path of the document
     * `viewName`: String, required, the name of the view. If a view of the same name already exists, it is replaced.
     * `saveDoc`: Boolean, optional, false by default
-    * `description`: String, optional
+    * `description`: String, optional. *Important*: The description is displayed in the UI. If not passed, the operation will set the description to the viewName
     * `fileName`: String, optional. If fileName is not passed, the blob's file name is used
   * The operation gets the ImageInfo of the input blob and adds it to the `picture:views` schema, after getting the image info (width, height, format, colorSpace, depth). If `saveDoc` is true, the document is saved.
   * If a rendition of the same name already exists, it is replaced 

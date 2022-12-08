@@ -42,7 +42,8 @@ import org.nuxeo.ecm.platform.picture.api.adapters.MultiviewPicture;
         + "Add a new view (viewName) to the picture:views field of the document referenced by the document parameter (id or path). "
         + "If viewName already exists, it is replaced. If fileName is not passed, the blob's file name is used. "
         + "If the document does not have the picture schema, the operation does nothing. "
-        + "Returns the modified document (saved if saveDoc is passed and true). ")
+        + "Returns the modified document (saved if saveDoc is passed and true). "
+        + "Notice the description is what is displayed in the UI. If not passed, the operation uses the viewName.")
 public class PictureAddToViews {
 
     public static final String ID = "Labs.PictureAddToViews";
@@ -75,6 +76,10 @@ public class PictureAddToViews {
 
             if (StringUtils.isEmpty((fileName))) {
                 fileName = input.getFilename();
+            }
+
+            if (StringUtils.isEmpty((description))) {
+                description = viewName;
             }
 
             ImageInfo info = imagingService.getImageInfo(input);
