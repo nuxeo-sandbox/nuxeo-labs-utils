@@ -18,13 +18,19 @@
  */
 package nuxeo.labs.utils.operations.pictures;
 
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.nuxeo.ecm.automation.core.Constants;
 import org.nuxeo.ecm.automation.core.annotations.Context;
 import org.nuxeo.ecm.automation.core.annotations.Operation;
 import org.nuxeo.ecm.automation.core.annotations.OperationMethod;
 import org.nuxeo.ecm.automation.core.annotations.Param;
 import org.nuxeo.ecm.core.api.Blob;
+import org.nuxeo.ecm.platform.mimetype.interfaces.MimetypeRegistry;
 import org.nuxeo.ecm.platform.picture.api.ImagingService;
+import org.nuxeo.runtime.api.Framework;
 
 /**
  * Crop an image using the default platform service
@@ -36,6 +42,8 @@ import org.nuxeo.ecm.platform.picture.api.ImagingService;
 public class PictureCrop {
 
     public static final String ID = "Labs.PictureCrop";
+    
+    private static final Log log = LogFactory.getLog(PictureCrop.class);
 
     @Context
     protected ImagingService imagingService;
@@ -56,6 +64,36 @@ public class PictureCrop {
     public Blob run(Blob input) {
 
         Blob cropped = imagingService.crop(input, left, top, width, height);
+        // Unfortunately, crop() does not set a file extension for the returned image. And we cannot make sure
+        // it will always be a jpg, because it is configurable. So, we need to extract the info, which
+        // is "costly"...
+        String ext = FilenameUtils.getExtension(cropped.getFilename());
+        if(ext.equalsIgnoreCase("null") || StringUtils.isBlank(ext)) {
+            MimetypeRegistry mimeTypeService = Framework.getService(MimetypeRegistry.class);
+            String baseName = FilenameUtils.getBaseName(cropped.getFilename());
+            try {
+                String mimeType = mimeTypeService.getMimetypeFromBlob(cropped);
+                cropped.setMimeType(mimeType);
+                switch(mimeType) {
+                case "image/jpg":
+                case "image/jpeg":
+                  cropped.setFilename(baseName + ".jpg");
+                  break;
+
+                case "image/png":
+                  cropped.setFilename(baseName + ".png");
+                  break;
+
+                default:
+                    // Give up...
+                  ext = null;
+                  break;
+                }
+            } catch (Exception e) {
+                log.error("PictureCrop: Error when getting the mimetype from the cropped blob", e);
+            }
+        }
+        
 
         return cropped;
     }
