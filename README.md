@@ -1,6 +1,5 @@
 # nuxeo-labs-utils
 
-⚠️ Work In Progress ⚠️
  
 ## Description
 This plugin contains miscellaneous utilities, mainly operations.
