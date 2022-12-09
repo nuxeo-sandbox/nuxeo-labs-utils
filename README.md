@@ -130,7 +130,7 @@ function run(input, params) {
     * `document`: String, required, the id or path of the document
     * `renditionName`: String, required, the name of the rendition to store
     * `saveDoc`: Boolean, optional, false by default
-  * The operation gets the `VideoInfo` of the input blob and adds it to the `vid:transcodedVideos` schema, after getting the `VideoInfo` (width, height, format, streams, …). If `saveDocu` is true, the document is saved.
+  * The operation gets the `VideoInfo` from the input blob and adds it to the `vid:transcodedVideos` schema, after getting the `VideoInfo` (width, height, format, streams, …). If `saveDoc` is true, the document is saved.
   * If a rendition of the same name already exists (case sensitive), it is replaced.
   * Return the document with its `vid:transcodedVideos` modified
   * If the document does not have the `video` schema, or if rendition is not found, the operation does nothing
@@ -149,10 +149,12 @@ function run(input, params) {
 
 ## Operations on Blobs
 * `Conversion > Labs.BlobGetMimeType`
-  * Return the mimetype of the input blob in the `nxlabs_mimetype` context variable
+  * Return the mime-type of the input blob in the `nxlabs_mimetype` context variable
   * Input: `blob`
   * Output: `blob`
   * Set the `nxlabs_mimetype` context variable with the mime type of the input blob, and returns the input blob unchanged.
+  * If the service cannot detect the mime type, `nxlabs_mimetype` is set to `null`.
+  * ⚠️ Notice this call can be costly, the input blob temporarily duplicated on disk, etc. => we recommend using it only when you have a blob with no mime-type (which can happens sometimes after custom conversion for example)
   * (This is a simple wrapper for `org.nuxeo.ecm.platform.mimetype.interfaces.MimetypeRegistry#getMimetypeFromBlob`)
 
 
@@ -179,7 +181,7 @@ These are helpers you can use inside Automation (regular or JS), just like the `
 . . .
 
 var blob = input["file:content"];
-var extension = NxLabs.getFileEXtension(blob.filename);
+var extension = NxLabs.getFileExtension(blob.filename);
 var baseName = NxLabs.getBaseName(blob.filename);
 input["dc:title"] = baseName;
 . . .
