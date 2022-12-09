@@ -16,6 +16,7 @@
   <production-state>testing</production-state>
   <supported>false</supported>
   <target-platform>
+    <name>lts</name>
     <version>[@NUXEO_TARGET_VERSION@,)</version>
   </target-platform>
   <!-- Dependencies on other packages -->
