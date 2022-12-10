@@ -169,7 +169,8 @@ function run(input, params) {
 * `Services > Labs.GetServerLog`
   * Input: `void`
   * Returns a `blob`, the current server.log file zipped
-  * For security reason, this operation is filtered and can only be ran by users part of the `administrators` group. If you need to change that, you must override the contribution (see `operations-contrib.xml` in `nuxeo-labs-utils-core/src/main/resources/OSGI-INF`)
+  * ⚠️: In cluster mode, you will get the log of one server, you can't specify a server (this feature was built mainly for dev./trouble shooting of a single instance.)
+  * ⚠️: For security reason, this operation is filtered and can only be ran by users part of the `administrators` group. If you need to change that, you must override the contribution (see `operations-contrib.xml` in `nuxeo-labs-utils-core/src/main/resources/OSGI-INF`)
 
 
 ## Automation Helpers
