@@ -5,6 +5,7 @@
 .publish/
 target
 .classpath
+classpath
 .project
 .settings/
 bin/

@@ -20,8 +20,8 @@ package nuxeo.labs.utils.operations.pictures;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.nuxeo.ecm.automation.core.Constants;
 import org.nuxeo.ecm.automation.core.annotations.Context;
 import org.nuxeo.ecm.automation.core.annotations.Operation;
@@ -43,7 +43,7 @@ public class PictureCrop {
 
     public static final String ID = "Labs.PictureCrop";
     
-    private static final Log log = LogFactory.getLog(PictureCrop.class);
+    private static final Logger log = LogManager.getLogger(PictureCrop.class);
 
     @Context
     protected ImagingService imagingService;

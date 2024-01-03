@@ -7,28 +7,31 @@ This plugin contains miscellaneous utilities, mainly operations.
 > [!IMPORTANT]
 > This plugin is not the same as [nuxeo-labs](https://github.com/nuxeo/nuxeo-labs), which contains other utilities.
 
-* Operations on Images
-  * Conversion > Labs.PictureGetInfo
-  * Document > Labs.AddToViews
-  * Document > Labs.RemoveFromViews
-  * Conversion > Labs.PictureCrop
-  * Conversion > Labs.PictureRotate
-* Operations on Videos
-  * Conversion > Labs.VideoGetInfo
-  * Document > Labs.VideoAddToTranscodedVideos
-  * Document > Labs.VideoRemoveFromTranscodedVideos
-* Operations on Blobs
-  * Conversion > Labs.BlobGetMimeType
-* Operations on Documents
-  * Document > Labs.DocumentGetThumbnail
-* Misc. Operations
-  * Services > Labs.GetServerLog
-* Automation Helpers
-  * NxLabs.getFileEXtension
-  * NxLabs.getBaseName
-  * NxLabs.getUserFullName
-  * NxLabs.commitAndStartTransaction
+* **Operations**
+  * Operations on Images
+    * Conversion > Labs.PictureGetInfo
+    * Document > Labs.AddToViews
+    * Document > Labs.RemoveFromViews
+    * Conversion > Labs.PictureCrop
+    * Conversion > Labs.PictureRotate
+  * Operations on Videos
+    * Conversion > Labs.VideoGetInfo
+    * Document > Labs.VideoAddToTranscodedVideos
+    * Document > Labs.VideoRemoveFromTranscodedVideos
+  * Operations on Blobs
+    * Conversion > Labs.BlobGetMimeType
+  * Operations on Documents
+    * Document > Labs.DocumentGetThumbnail
+  * Misc. Operations
+    * Services > Labs.GetServerLog
+  * Automation Helpers
+    * NxLabs.getFileEXtension
+    * NxLabs.getBaseName
+    * NxLabs.getUserFullName
+    * NxLabs.commitAndStartTransaction
 
+* **Default Icon Thumbnail Factory**
+  * Allows for displaying the default icon instead of calculating one
 
 ## Operations on Images
 * `Conversion > Labs.PictureGetInfo`
@@ -218,6 +221,43 @@ input["dc:title"] = baseName;
   * (No parametes)
   * Wrapper around the `TransationFeature` class.
   * Useful when looping and modifying several documents: databases don't like big transactions, so, for example, when looping on 10,000 documents, you want to commit the transaction every 50, 100 documents.
+
+
+## Default Icon Thumbnail Factory
+
+In some context, calculating a thumbnail can be costly or can fill the log with a lot of errors, etc.
+
+When you don't need a thumbnail for a specific document type, you can override the corresponding `ThumbnailFactory` by telling Nuxeo to use the `nuxeo.labs.utils.DocTypeIconThumbnailFactory` class instead. For example, to override the default thumbnail factory for images, you would override the `thumbnailPictureFactory`:
+
+```
+<extension target="org.nuxeo.ecm.core.api.thumbnail.ThumbnailService"
+           point="thumbnailFactory">
+  <thumbnailFactory name="thumbnailPictureFactory"
+                    facet="Picture"
+                    factoryClass="nuxeo.labs.utils.DocTypeIconThumbnailFactory" />
+</extension>
+```
+
+For video, you override the `thumbnailVideoFactory`:
+
+```
+<extension target="org.nuxeo.ecm.core.api.thumbnail.ThumbnailService"
+           point="thumbnailFactory">
+  <thumbnailFactory name="thumbnailVideoFactory"
+                    facet="Video"
+                    factoryClass="nuxeo.labs.utils.DocTypeIconThumbnailFactory" />
+</extension>
+```
+
+For the default factory:
+
+```
+<extension target="org.nuxeo.ecm.core.api.thumbnail.ThumbnailService"
+           point="thumbnailFactory">
+  <thumbnailFactory name="thumbnailDocumentFactory"
+                    factoryClass="nuxeo.labs.utils.DocTypeIconThumbnailFactory" />
+</extension>
+```
 
 
 ## Support

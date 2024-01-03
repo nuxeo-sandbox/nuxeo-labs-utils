@@ -17,7 +17,7 @@
   <supported>false</supported>
   <target-platform>
     <name>lts</name>
-    <version>[@NUXEO_TARGET_VERSION@,)</version>
+    <version>[2021.0,2024.99)</version>
   </target-platform>
   <!-- Dependencies on other packages -->
   <!-- <dependencies> -->
