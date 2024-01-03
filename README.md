@@ -4,6 +4,9 @@
 ## Description
 This plugin contains miscellaneous utilities, mainly operations.
 
+> [!IMPORTANT]
+> This plugin is not the same as [nuxeo-labs](https://github.com/nuxeo/nuxeo-labs), which contains other utilities.
+
 * Operations on Images
   * Conversion > Labs.PictureGetInfo
   * Document > Labs.AddToViews
