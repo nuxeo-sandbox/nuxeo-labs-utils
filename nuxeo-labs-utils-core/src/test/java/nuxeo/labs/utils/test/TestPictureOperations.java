@@ -16,7 +16,7 @@
  * Contributors:
  *     Thibaud Arguillere
  */
-package nuxeo.labs.utils;
+package nuxeo.labs.utils.test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -45,6 +45,7 @@ import org.nuxeo.ecm.platform.picture.api.ImageInfo;
 import org.nuxeo.ecm.platform.picture.api.ImagingService;
 import org.nuxeo.ecm.platform.picture.api.PictureView;
 import org.nuxeo.ecm.platform.picture.api.adapters.MultiviewPictureAdapter;
+import org.nuxeo.ecm.platform.picture.core.ImagingFeature;
 import org.nuxeo.runtime.test.runner.Deploy;
 import org.nuxeo.runtime.test.runner.Features;
 import org.nuxeo.runtime.test.runner.FeaturesRunner;
@@ -60,7 +61,7 @@ import nuxeo.labs.utils.operations.pictures.PictureRotate;
  *
  */
 @RunWith(FeaturesRunner.class)
-@Features(AutomationFeature.class)
+@Features({AutomationFeature.class, ImagingFeature.class})
 @RepositoryConfig(init = DefaultRepositoryInit.class, cleanup = Granularity.METHOD)
 @Deploy("org.nuxeo.ecm.platform.commandline.executor")
 @Deploy("org.nuxeo.ecm.platform.picture.core")

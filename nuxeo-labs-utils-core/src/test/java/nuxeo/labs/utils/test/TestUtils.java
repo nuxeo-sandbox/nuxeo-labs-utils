@@ -16,7 +16,7 @@
  * Contributors:
  *     Thibaud Arguillere
  */
-package nuxeo.labs.utils;
+package nuxeo.labs.utils.test;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;

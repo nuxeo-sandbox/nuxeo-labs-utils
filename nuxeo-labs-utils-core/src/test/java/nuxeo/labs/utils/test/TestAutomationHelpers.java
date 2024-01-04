@@ -16,7 +16,7 @@
  * Contributors:
  *     Thibaud Arguillere
  */
-package nuxeo.labs.utils;
+package nuxeo.labs.utils.test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -37,7 +37,6 @@ import org.nuxeo.ecm.automation.context.ContextService;
 import org.nuxeo.ecm.automation.test.AutomationFeature;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
-import org.nuxeo.ecm.core.api.NuxeoPrincipal;
 import org.nuxeo.ecm.core.test.DefaultRepositoryInit;
 import org.nuxeo.ecm.core.test.annotations.Granularity;
 import org.nuxeo.ecm.core.test.annotations.RepositoryConfig;
@@ -48,6 +47,7 @@ import org.nuxeo.runtime.test.runner.Features;
 import org.nuxeo.runtime.test.runner.FeaturesRunner;
 
 import nuxeo.labs.utils.automationhelpers.NxLabs;
+
 
 /**
  * 

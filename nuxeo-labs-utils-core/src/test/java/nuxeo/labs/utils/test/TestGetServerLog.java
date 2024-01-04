@@ -16,7 +16,7 @@
  * Contributors:
  *     Thibaud Arguillere
  */
-package nuxeo.labs.utils;
+package nuxeo.labs.utils.test;
 
 import javax.inject.Inject;
 
@@ -33,8 +33,6 @@ import org.nuxeo.ecm.core.test.annotations.RepositoryConfig;
 import org.nuxeo.runtime.test.runner.Deploy;
 import org.nuxeo.runtime.test.runner.Features;
 import org.nuxeo.runtime.test.runner.FeaturesRunner;
-
-import nuxeo.labs.utils.operations.GetServerLog;
 
 /**
  * Actually, we can't unit test this, since during a unit test, logs
