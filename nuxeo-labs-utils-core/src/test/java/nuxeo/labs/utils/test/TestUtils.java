@@ -48,7 +48,7 @@ public class TestUtils {
     }
 
     public static DocumentModel createPictureWithTestImage(CoreSession session, TransactionalFeature txFeature,
-            Blob imageBlob, boolean checkViewsAreCalculated) throws IOException {
+            Blob imageBlob, boolean checkViewsAreCalculated) throws Exception {
 
         // Get the test file and create a Picture document with it
         if (imageBlob == null) {
@@ -61,8 +61,8 @@ public class TestUtils {
         doc = session.createDocument(doc);
         // Wait for default views to be computed
         txFeature.nextTransaction();
+        
         doc.refresh();
-
         if (checkViewsAreCalculated) {
             assertNotNull(doc.getPropertyValue("picture:views"));
             MultiviewPictureAdapter adapter = new MultiviewPictureAdapter(doc);

@@ -104,7 +104,7 @@ public class TestPictureOperations {
     }
 
     @Test
-    public void shouldAddtoView() throws IOException, OperationException {
+    public void shouldAddtoView() throws Exception {
         
         Blob input = TestUtils.createBlobFromTestImage();
         DocumentModel doc = TestUtils.createPictureWithTestImage(session, txFeature, input, true);
@@ -133,7 +133,7 @@ public class TestPictureOperations {
     }
 
     @Test
-    public void shouldRemoveFromViewWithSave() throws OperationException, IOException {
+    public void shouldRemoveFromViewWithSave() throws Exception {
         
         DocumentModel doc = TestUtils.createPictureWithTestImage(session, txFeature, null, true);
         MultiviewPictureAdapter adapter = new MultiviewPictureAdapter(doc);
@@ -151,7 +151,7 @@ public class TestPictureOperations {
     }
 
     @Test
-    public void shouldRemoveFromViewCaseInsensitive() throws OperationException, IOException {
+    public void shouldRemoveFromViewCaseInsensitive() throws Exception {
         
         DocumentModel doc = TestUtils.createPictureWithTestImage(session, txFeature, null, true);
         MultiviewPictureAdapter adapter = new MultiviewPictureAdapter(doc);

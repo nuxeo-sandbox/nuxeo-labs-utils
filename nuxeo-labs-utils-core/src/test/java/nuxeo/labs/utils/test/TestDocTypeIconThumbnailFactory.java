@@ -21,14 +21,10 @@ package nuxeo.labs.utils.test;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import java.io.Serializable;
-
 import javax.inject.Inject;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.nuxeo.ecm.automation.core.annotations.Context;
 import org.nuxeo.ecm.automation.test.AutomationFeature;
 import org.nuxeo.ecm.core.api.Blob;
 import org.nuxeo.ecm.core.api.CoreSession;
@@ -37,6 +33,7 @@ import org.nuxeo.ecm.core.api.thumbnail.ThumbnailService;
 import org.nuxeo.ecm.core.test.DefaultRepositoryInit;
 import org.nuxeo.ecm.core.test.annotations.Granularity;
 import org.nuxeo.ecm.core.test.annotations.RepositoryConfig;
+import org.nuxeo.ecm.platform.picture.api.adapters.MultiviewPictureAdapter;
 import org.nuxeo.ecm.platform.picture.core.ImagingFeature;
 import org.nuxeo.runtime.test.runner.Deploy;
 import org.nuxeo.runtime.test.runner.Features;
@@ -75,23 +72,17 @@ public class TestDocTypeIconThumbnailFactory {
 
     @Test
     public void shouldGetDefaultIcon() throws Exception {
-        
-        // Check our factory was deployed
-        //assertTrue(thumbnailService instanceof DocTypeIconThumbnailFactory);
 
-        DocumentModel doc;
-        doc = session.createDocumentModel("/", "testDoc", "Picture");
-        doc = session.createDocument(doc);
-        doc = session.saveDocument(doc);
-
-        txFeature.nextTransaction();
+        DocumentModel doc = TestUtils.createPictureWithTestImage(session, txFeature, null, true);
+        MultiviewPictureAdapter adapter = new MultiviewPictureAdapter(doc);
+        assertNotNull(adapter.getView("Small")); // One of the default rendition
 
         doc = session.getDocument(doc.getRef());
         Blob thumbnail = thumbnailService.getThumbnail(doc, session);
         assertNotNull(thumbnail);
 
-        // For a file, we should have either image_100.png (if the test could deploy the icons
-        // or the default generated noThumbnail.png
+        // For a Picture, we should have either image_100.png (if the test could deploy the icons)
+        // or the default generated noThumbnail.png, but nothing from the picture:views
         String fileName = thumbnail.getFilename();
         assertTrue(fileName.equals("image_100.png") || fileName.equals(DocTypeIconThumbnailFactory.NO_THUMBNAIL_FALLBACK_NAME));
     }
