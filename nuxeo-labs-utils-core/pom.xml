@@ -32,6 +32,19 @@
       <artifactId>nuxeo-platform-tag</artifactId>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>org.nuxeo.ecm.platform</groupId>
+      <artifactId>nuxeo-thumbnail</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <!--
+    <dependency>
+      <groupId>org.nuxeo.ecm.core</groupId>
+      <artifactId>nuxeo-core-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    -->
+
 
     <!-- Test -->
     <dependency>
@@ -41,7 +54,7 @@
     </dependency>
     <dependency>
       <groupId>org.nuxeo.ecm.platform</groupId>
-      <artifactId>nuxeo-thumbnail</artifactId>
+      <artifactId>nuxeo-platform-webapp-types</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>

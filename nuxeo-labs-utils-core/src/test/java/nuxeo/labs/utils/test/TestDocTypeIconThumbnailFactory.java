@@ -19,6 +19,9 @@
 package nuxeo.labs.utils.test;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+import java.io.Serializable;
 
 import javax.inject.Inject;
 
@@ -40,23 +43,25 @@ import org.nuxeo.runtime.test.runner.Features;
 import org.nuxeo.runtime.test.runner.FeaturesRunner;
 import org.nuxeo.runtime.test.runner.TransactionalFeature;
 
+import nuxeo.labs.utils.DocTypeIconThumbnailFactory;
+
 /**
- * 
  * @since 2023
  */
 @RunWith(FeaturesRunner.class)
-@Features({AutomationFeature.class, ImagingFeature.class})
+@Features({ AutomationFeature.class, ImagingFeature.class })
 @RepositoryConfig(init = DefaultRepositoryInit.class, cleanup = Granularity.METHOD)
 @Deploy("org.nuxeo.ecm.platform.types")
 @Deploy("org.nuxeo.ecm.platform.webapp.types")
 @Deploy("org.nuxeo.ecm.platform.thumbnail")
 @Deploy("org.nuxeo.ecm.platform.picture.core")
 @Deploy("org.nuxeo.ecm.platform.tag")
+@Deploy("org.nuxeo.ecm.core.api")
 @Deploy("nuxeo.labs.utils.nuxeo-labs-utils-core")
 @Deploy("nuxeo.labs.utils.nuxeo-labs-utils-core:thumbnail-factory-test.xml")
 // Too complicated to make sure the correct icons are deployed, giving up on iunit-testing
 // (the live testing shows it's working)
-@Ignore
+// @Ignore
 public class TestDocTypeIconThumbnailFactory {
 
     @Inject
@@ -65,24 +70,30 @@ public class TestDocTypeIconThumbnailFactory {
     @Inject
     protected TransactionalFeature txFeature;
 
-    @Context
+    @Inject
     protected ThumbnailService thumbnailService;
-    
+
     @Test
     public void shouldGetDefaultIcon() throws Exception {
         
-     // Create Picture doc, waiting for renditions
-        DocumentModel doc = TestUtils.createPictureWithTestImage(session, txFeature, null, true);
-        
-        Thread.sleep(3000);
+        // Check our factory was deployed
+        //assertTrue(thumbnailService instanceof DocTypeIconThumbnailFactory);
+
+        DocumentModel doc;
+        doc = session.createDocumentModel("/", "testDoc", "Picture");
+        doc = session.createDocument(doc);
+        doc = session.saveDocument(doc);
+
         txFeature.nextTransaction();
-        
+
         doc = session.getDocument(doc.getRef());
         Blob thumbnail = thumbnailService.getThumbnail(doc, session);
         assertNotNull(thumbnail);
-        
-        // It should be the default Picture doc icon
-        // To be continued once we can make sure pictuire__100.png is deployed...
+
+        // For a file, we should have either image_100.png (if the test could deploy the icons
+        // or the default generated noThumbnail.png
+        String fileName = thumbnail.getFilename();
+        assertTrue(fileName.equals("image_100.png") || fileName.equals(DocTypeIconThumbnailFactory.NO_THUMBNAIL_FALLBACK_NAME));
     }
 
 }

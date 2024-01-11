@@ -291,6 +291,7 @@
   <classpathentry kind="var" path="M2_REPO/org/nuxeo/ecm/platform/nuxeo-invite/2023.5.17/nuxeo-invite-2023.5.17.jar" sourcepath="M2_REPO/org/nuxeo/ecm/platform/nuxeo-invite/2023.5.17/nuxeo-invite-2023.5.17-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/nuxeo/ecm/webengine/nuxeo-webengine-base/2023.5.17/nuxeo-webengine-base-2023.5.17.jar" sourcepath="M2_REPO/org/nuxeo/ecm/webengine/nuxeo-webengine-base/2023.5.17/nuxeo-webengine-base-2023.5.17-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/nuxeo/ecm/platform/nuxeo-platform-comment-api/2023.5.17/nuxeo-platform-comment-api-2023.5.17.jar" sourcepath="M2_REPO/org/nuxeo/ecm/platform/nuxeo-platform-comment-api/2023.5.17/nuxeo-platform-comment-api-2023.5.17-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/nuxeo/ecm/platform/nuxeo-thumbnail/2023.5.17/nuxeo-thumbnail-2023.5.17.jar" sourcepath="M2_REPO/org/nuxeo/ecm/platform/nuxeo-thumbnail/2023.5.17/nuxeo-thumbnail-2023.5.17-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/nuxeo/ecm/automation/nuxeo-automation-test/2023.5.17/nuxeo-automation-test-2023.5.17.jar" sourcepath="M2_REPO/org/nuxeo/ecm/automation/nuxeo-automation-test/2023.5.17/nuxeo-automation-test-2023.5.17-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/nuxeo/ecm/automation/nuxeo-automation-scripting/2023.5.17/nuxeo-automation-scripting-2023.5.17.jar" sourcepath="M2_REPO/org/nuxeo/ecm/automation/nuxeo-automation-scripting/2023.5.17/nuxeo-automation-scripting-2023.5.17-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/nuxeo/runtime/nuxeo-runtime-test/2023.5.17/nuxeo-runtime-test-2023.5.17.jar" sourcepath="M2_REPO/org/nuxeo/runtime/nuxeo-runtime-test/2023.5.17/nuxeo-runtime-test-2023.5.17-sources.jar"/>
@@ -393,6 +394,6 @@
   <classpathentry kind="var" path="M2_REPO/org/nuxeo/ecm/core/nuxeo-core-management-jtajca/2023.5.17/nuxeo-core-management-jtajca-2023.5.17.jar" sourcepath="M2_REPO/org/nuxeo/ecm/core/nuxeo-core-management-jtajca/2023.5.17/nuxeo-core-management-jtajca-2023.5.17-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/datadoghq/dd-trace-api/0.115.1/dd-trace-api-0.115.1.jar" sourcepath="M2_REPO/com/datadoghq/dd-trace-api/0.115.1/dd-trace-api-0.115.1-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/nuxeo/ecm/automation/nuxeo-automation-core/2023.5.17/nuxeo-automation-core-2023.5.17-tests.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/nuxeo/ecm/platform/nuxeo-thumbnail/2023.5.17/nuxeo-thumbnail-2023.5.17.jar" sourcepath="M2_REPO/org/nuxeo/ecm/platform/nuxeo-thumbnail/2023.5.17/nuxeo-thumbnail-2023.5.17-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/nuxeo/ecm/platform/nuxeo-platform-webapp-types/2023.5.17/nuxeo-platform-webapp-types-2023.5.17.jar" sourcepath="M2_REPO/org/nuxeo/ecm/platform/nuxeo-platform-webapp-types/2023.5.17/nuxeo-platform-webapp-types-2023.5.17-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/nuxeo/ecm/platform/nuxeo-platform-imaging-core/2023.5.17/nuxeo-platform-imaging-core-2023.5.17-tests.jar"/>
 </classpath>
