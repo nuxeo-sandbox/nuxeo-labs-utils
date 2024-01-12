@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<component name="nuxeo.labs.utils.test.thumbnails" version="1.0">
+
+	<extension target="org.nuxeo.ecm.core.api.thumbnail.ThumbnailService"
+		       point="thumbnailFactory">
+		<thumbnailFactory name="thumbnailPictureFactory"
+			              facet="Picture"
+			              factoryClass="nuxeo.labs.utils.DocTypeIconThumbnailFactory" />
+		<thumbnailFactory name="thumbnailDocumentFactory"
+			              factoryClass="nuxeo.labs.utils.DocTypeIconThumbnailFactory" />
+	</extension>
+
+</component>
