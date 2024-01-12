@@ -35,6 +35,7 @@ import org.nuxeo.ecm.core.api.Blob;
 import org.nuxeo.ecm.core.api.Blobs;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
+import org.nuxeo.ecm.core.api.PropertyException;
 import org.nuxeo.ecm.core.api.thumbnail.ThumbnailFactory;
 import org.nuxeo.ecm.platform.mimetype.interfaces.MimetypeRegistry;
 import org.nuxeo.ecm.platform.thumbnail.ThumbnailConstants;
@@ -52,7 +53,7 @@ public class DocTypeIconThumbnailFactory implements ThumbnailFactory {
 
     // Caching the blobs
     protected static Map<String, Blob> docTypesAndBlobs = new HashMap<String, Blob>();
-    
+
     public static final String NO_THUMBNAIL_FALLBACK_NAME = "noThumbnail.png";
 
     protected static Blob noThumbnailFallbackBlob = null;
@@ -61,13 +62,18 @@ public class DocTypeIconThumbnailFactory implements ThumbnailFactory {
 
     @Override
     public Blob getThumbnail(DocumentModel doc, CoreSession session) {
-        Blob thumbnail = null;
-        if (doc.hasFacet(ThumbnailConstants.THUMBNAIL_FACET)) {
-            thumbnail = (Blob) doc.getPropertyValue(ThumbnailConstants.THUMBNAIL_PROPERTY_NAME);
+
+        try {
+            if (doc.hasFacet(ThumbnailConstants.THUMBNAIL_FACET)) {
+                Blob thumbnail = (Blob) doc.getPropertyValue(ThumbnailConstants.THUMBNAIL_PROPERTY_NAME);
+                if (thumbnail != null) {
+                    return thumbnail;
+                }
+            }
+        } catch (PropertyException e) {
+            // Ignore
         }
-        if (thumbnail == null) {
-            thumbnail = getDefaultThumbnail(doc);
-        }
+
         return getDefaultThumbnail(doc);
     }
 
@@ -108,12 +114,12 @@ public class DocTypeIconThumbnailFactory implements ThumbnailFactory {
 
         try {
             String path = "nuxeo.war";
-            if(!iconPath.startsWith(File.separator )) {
+            if (!iconPath.startsWith(File.separator)) {
                 path += File.separator;
             }
             path += iconPath;
             File iconFile = FileUtils.getResourceFileFromContext(path);
-            //iconFile may be null in unit tests, where I could not find a way to access nuxeo.war...
+            // iconFile may be null in unit tests, where I could not find a way to access nuxeo.war...
             if (iconFile != null && iconFile.exists()) {
                 MimetypeRegistry mimetypeRegistry = Framework.getService(MimetypeRegistry.class);
                 String mimeType = mimetypeRegistry.getMimetypeFromFile(iconFile);
@@ -171,8 +177,8 @@ public class DocTypeIconThumbnailFactory implements ThumbnailFactory {
                 boolean ok = ImageIO.write(img, "png", noThumbnailFallbackFile);
                 noThumbnailFallbackBlob.setMimeType("image/png");
                 noThumbnailFallbackBlob.setFilename(NO_THUMBNAIL_FALLBACK_NAME);
-                if(!ok) {
-                    
+                if (!ok) {
+                    // Ignore
                 }
             } catch (IOException ex) {
                 // We have to give up
