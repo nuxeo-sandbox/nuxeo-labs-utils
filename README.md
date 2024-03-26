@@ -24,11 +24,13 @@ This plugin contains miscellaneous utilities, mainly operations.
     * Document > Labs.DocumentGetThumbnail
   * Misc. Operations
     * Services > Labs.GetServerLog
-  * Automation Helpers
-    * NxLabs.getFileEXtension
-    * NxLabs.getBaseName
-    * NxLabs.getUserFullName
-    * NxLabs.commitAndStartTransaction
+
+* **Automation Helpers**
+  * NxLabs.getFileEXtension
+  * NxLabs.getBaseName
+  * NxLabs.getUserFullName
+  * NxLabs.commitAndStartTransaction
+  * NxLabs.threadSleep
 
 * **Default Icon Thumbnail Factory**
   * Allows for displaying the default icon instead of calculating one
@@ -221,6 +223,10 @@ input["dc:title"] = baseName;
   * (No parametes)
   * Wrapper around the `TransationFeature` class.
   * Useful when looping and modifying several documents: databases don't like big transactions, so, for example, when looping on 10,000 documents, you want to commit the transaction every 50, 100 documents.
+
+* `NxLabs.threadSleep`
+  * Parameter is a long, the number of millisecons to pause the current thread
+  * This is a wrapper for `java.lang.Thread.sleep(long millis)` 
 
 
 ## Default Icon Thumbnail Factory

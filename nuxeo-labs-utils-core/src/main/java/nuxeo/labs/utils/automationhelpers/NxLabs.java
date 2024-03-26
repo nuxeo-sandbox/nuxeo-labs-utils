@@ -116,6 +116,16 @@ public class NxLabs implements ContextHelper {
         TransactionHelper.commitOrRollbackTransaction();
         TransactionHelper.startTransaction();
     }
-
+    
+    /**
+     * Sleeps ms milliseconds
+     * 
+     * @param ms
+     * @throws InterruptedException
+     * @since 2023.5
+     */
+    public void threadSleep (long ms) throws InterruptedException {
+        Thread.sleep(ms);
+    }
 
 }
