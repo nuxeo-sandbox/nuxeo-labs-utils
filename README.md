@@ -24,6 +24,7 @@ This plugin contains miscellaneous utilities, mainly operations.
     * Document > Labs.DocumentGetThumbnail
   * Misc. Operations
     * Services > Labs.GetServerLog
+    * Services > Labs.CreateICS
 
 * **Automation Helpers**
   * NxLabs.getFileEXtension
@@ -181,6 +182,24 @@ function run(input, params) {
   * ⚠️: For security reason, this operation is filtered and can only be ran by users part of the `administrators` group. If you need to change that, you must override the contribution (see `operations-contrib.xml` in `nuxeo-labs-utils-core/src/main/resources/OSGI-INF`)
 
 
+* `Services > Labs.CreateICS`
+  * Input: `void`
+  * Return a `Blob`, an `.ics` file (mime type "text/calendar"). File name is the meeting's label + .ics
+  * Parameters
+    * `label`: String, required, the title of the event
+    * `startDate`: required, the start of the event, with date, time and the zone. You can pass an ISO string (i.e. `2024-05-23T14:37:02.511285+02:00`)
+    * `endDate`: Required if `duration` is not passed. The end date of the event (see `startDate` about the format).
+    * `duration`: Required if ` endDate` is not passed. String, a Java period, with only the hours and optionally the minutes: `"PT1H30M"`, `"PT1H"`, etc.
+    * `description`: String, optional, additional information.
+    * `location`: String, optional, the location (`"Room #1"` - this is not _geo_ location)
+    * `url`: String, optional, additional information on a website
+    * `organizerMail`: String, optional, the email of the organizer
+
+The operation returns a blob containing the .ics file which can then be imported to a Calendar (Outlook, Google Calendar, Apple Calendar, ...)
+
+⚠️ Little warning: Depending on the calendar tool used, some fields may not be imported, or may behave differently.
+
+
 ## Automation Helpers
 
 These are helpers you can use inside Automation (regular or JS), just like the `Fn` helper. Here is an example with JS:
@@ -279,8 +298,39 @@ This is a moving project (no API maintenance, no deprecation process, etc.) If a
 
 [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0)
 
+This plugin uses a java library, [biweekly](https://github.com/mangstadt/biweekly). License is business friendly (use it as you want, with the license disclaimer, see below).
+
 
 ## About Nuxeo
 
 [Nuxeo](www.nuxeo.com), developer of the leading Content Services Platform, is reinventing enterprise content management (ECM) and digital asset management (DAM). Nuxeo is fundamentally changing how people work with data and content to realize new value from digital information. Its cloud-native platform has been deployed by large enterprises, mid-sized businesses and government agencies worldwide. Customers like Verizon, Electronic Arts, ABN Amro, and the Department of Defense have used Nuxeo's technology to transform the way they do business. Founded in 2008, the company is based in New York with offices across the United States, Europe, and Asia.
-    
+
+
+## biweekly framework license
+
+```
+ Copyright (c) 2013-2024, Michael Angstadt
+ All rights reserved.
+
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions are met: 
+
+ 1. Redistributions of source code must retain the above copyright notice, this
+ list of conditions and the following disclaimer. 
+ 2. Redistributions in binary form must reproduce the above copyright notice,
+ this list of conditions and the following disclaimer in the documentation
+ and/or other materials provided with the distribution. 
+
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+ ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ ```
+
+
