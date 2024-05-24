@@ -18,6 +18,7 @@
  */
 package nuxeo.labs.utils.test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -119,6 +120,8 @@ public class TestCreateICS {
         Blob icsBlob = (Blob) automationService.run(ctx, CreateICS.ID, params);
         
         assertNotNull(icsBlob);
+        assertEquals(LABEL + ".ics", icsBlob.getFilename());
+        
         String raw = icsBlob.getString();
         
         assertTrue(raw.indexOf(LABEL) > -1);
@@ -143,6 +146,8 @@ public class TestCreateICS {
         Blob icsBlob = (Blob) automationService.run(ctx, CreateICS.ID, params);
         
         assertNotNull(icsBlob);
+        assertEquals(LABEL + ".ics", icsBlob.getFilename());
+        
         String raw = icsBlob.getString();
         
         assertTrue(raw.indexOf(LABEL) > -1);
@@ -164,16 +169,72 @@ public class TestCreateICS {
         params.put("description", "The description");
         params.put("location", "Room #1");
         params.put("url", "https://someserver.abc/a/b/c.html");
-        params.put("organizerMail", "devnull@example.com");
+        params.put("organizerMail", "abc@def");
+        params.put("attendees", "someone@abd.def, ghi@jkl, mno@pqr");
         
         Blob icsBlob = (Blob) automationService.run(ctx, CreateICS.ID, params);
         
         assertNotNull(icsBlob);
+        assertEquals(LABEL + ".ics", icsBlob.getFilename());
+        
         String raw = icsBlob.getString();
         
         assertTrue(raw.indexOf(LABEL) > -1);
         assertTrue(raw.indexOf("DTSTART:" + NOW_VCAL) > -1);
         assertTrue(raw.indexOf("DURATION:" + DURATION) > -1);
+        assertTrue(raw.indexOf("ATTENDEE:mailto:someone@abd.def") > -1);
+        assertTrue(raw.indexOf("ATTENDEE:mailto:ghi@jkl") > -1);
+        assertTrue(raw.indexOf("ATTENDEE:mailto:mno@pqr") > -1);
+        
+    }
+
+    @Test
+    public void shouldCreateSimpleICSFullDay() throws Exception {
+
+        OperationContext ctx = new OperationContext(session);
+                
+        Map<String, Object> params = new HashMap<>();
+        params.put("label", LABEL);
+        // Time should be ignored
+        params.put("startDate", "2030-05-28T03:04:05+02:00");
+        params.put("endDate", "2030-05-31T05:04:05+02:00");
+        params.put("fullDays", true);
+        
+        Blob icsBlob = (Blob) automationService.run(ctx, CreateICS.ID, params);
+        
+        assertNotNull(icsBlob);
+        assertEquals(LABEL + ".ics", icsBlob.getFilename());
+        
+        String raw = icsBlob.getString();
+        
+        assertTrue(raw.indexOf(LABEL) > -1);
+        assertTrue(raw.indexOf("DTSTART;VALUE=DATE:20300528") > -1);
+        assertTrue(raw.indexOf("DTEND;VALUE=DATE:20300531") > -1);
+        
+    }
+
+    @Test
+    public void shouldCreateSimpleICSFullDayWithDuration() throws Exception {
+
+        OperationContext ctx = new OperationContext(session);
+                
+        Map<String, Object> params = new HashMap<>();
+        params.put("label", LABEL);
+        // Time will be ignored
+        params.put("startDate", "2030-05-28");
+        params.put("duration", "P3D");
+        params.put("fullDays", true);
+        
+        Blob icsBlob = (Blob) automationService.run(ctx, CreateICS.ID, params);
+        
+        assertNotNull(icsBlob);
+        assertEquals(LABEL + ".ics", icsBlob.getFilename());
+        
+        String raw = icsBlob.getString();
+        
+        assertTrue(raw.indexOf(LABEL) > -1);
+        assertTrue(raw.indexOf("DTSTART;VALUE=DATE:20300528") > -1);
+        assertTrue(raw.indexOf("DURATION:P3D") > -1);
         
     }
 }

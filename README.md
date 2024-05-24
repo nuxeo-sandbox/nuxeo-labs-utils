@@ -188,16 +188,45 @@ function run(input, params) {
   * Parameters
     * `label`: String, required, the title of the event
     * `startDate`: required, the start of the event, with date, time and the zone. You can pass an ISO string (i.e. `2024-05-23T14:37:02.511285+02:00`)
-    * `endDate`: Required if `duration` is not passed. The end date of the event (see `startDate` about the format).
-    * `duration`: Required if ` endDate` is not passed. String, a Java period, with only the hours and optionally the minutes: `"PT1H30M"`, `"PT1H"`, etc.
+      * If `fullDays` is `true`, you can omit the time.
+    * `endDate`: Required if `duration` is not passed and `fullDays` is `false`. The end date of the event (see `startDate` about the format).
+    * `duration`: Required if ` endDate`  is not passed and `fullDays` is `false`. String, a Java period, with only the hours and optionally the minutes: `"PT1H30M"`, `"PT1H"`, etc.
+    * `fullDays`: Boolean, optional. When passed, the meeting is for the whole day (or days if you pass an `endDate` or a `duration`)
     * `description`: String, optional, additional information.
-    * `location`: String, optional, the location (`"Room #1"` - this is not _geo_ location)
+    * `location`: String, optional, the location (`"Room #1"` - this is not _geo_ location. Can be a link to a Zoom/Teams/etc. meeting)
     * `url`: String, optional, additional information on a website
     * `organizerMail`: String, optional, the email of the organizer
+    * `attendees`: String, optional. List of mail addresses, separated with a comma
+  * The operation returns a blob containing the .ics file which can then be imported to a Calendar (Outlook, Google Calendar, Apple Calendar, ...)
+  * ⚠️ Little warning: Depending on the calendar tool used, some fields may not be imported, or may behave differently.
+  * **Examples using JS Automation** (input `void`,  output `blob`)
 
-The operation returns a blob containing the .ics file which can then be imported to a Calendar (Outlook, Google Calendar, Apple Calendar, ...)
+```
+function run(input, params) {
+  // Simple event, one hour and 30 mn
+  var icsBlob = Labs.CreateICS(
+    null, {
+      "label": "My New meeting",
+      "startDate": "2024-05-28T11:00+02:00",
+      "duration": "PT1H30M",
+      "location": "MeetingRoom Blue"
+    });
+  
+  // 3 days event with attendees
+  var icsBlob = Labs.CreateICS(
+    null, {
+      "label": "My New meeting",
+      "startDate": "2024-05-28",
+      "duration": "PT3D",
+      "location": "Somewhere",
+      "attendees": "someone@abc.def, other@ghi.jkl, onemore@mno.pqr"
+    });
+  
+  return icsBlob;
 
-⚠️ Little warning: Depending on the calendar tool used, some fields may not be imported, or may behave differently.
+}
+```
+
 
 
 ## Automation Helpers

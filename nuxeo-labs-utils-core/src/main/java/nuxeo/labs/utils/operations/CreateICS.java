@@ -20,6 +20,7 @@ package nuxeo.labs.utils.operations;
 
 import biweekly.ICalVersion;
 import biweekly.ICalendar;
+import biweekly.component.VAlarm;
 import biweekly.component.VEvent;
 import biweekly.io.text.ICalWriter;
 import biweekly.property.DateStart;
@@ -47,8 +48,10 @@ import java.util.Calendar;
 @Operation(id = CreateICS.ID, category = Constants.CAT_SERVICES, label = "Create .ics File", description = ""
         + "Creates an .ics blob from the parameters. label and startDate are required."
         + " For the end date, you can pass either endDate or duration, which is a java Period (like PT1H30M)."
-        + " location is string, like 'Room 1'."
-        + "é Warning: you can pass an ISO date for startDate and endDate. Make sure to specify a timezone.")
+        + " Also, if fullDays is true, endDate and duration are optional"
+        + " location is string, like 'Room 1'. Can be a link to a Zoom or Teams meeting, etc."
+        + " attendees is a list of emails, separated by a comma"
+        + " Warning: dates must be provided either as Java Calendar object or an ISO date string, make sure to specify a timezone.")
 public class CreateICS {
 
     public static final String ID = "Labs.CreateICS";
@@ -64,6 +67,9 @@ public class CreateICS {
 
     @Param(name = "duration", required = false)
     String duration;
+    
+    @Param(name = "fullDays", required = false)
+    Boolean fullDays = false;
 
     @Param(name = "description", required = false)
     protected String description;
@@ -76,6 +82,9 @@ public class CreateICS {
 
     @Param(name = "organizerMail", required = false)
     protected String organizerMail;
+    
+    @Param(name = "attendees", required = false)
+    String attendees;
 
     @OperationMethod
     public Blob run() {
@@ -85,15 +94,24 @@ public class CreateICS {
         VEvent event = new VEvent();
         
         event.setSummary(label);
+        
+        if(fullDays) {
+            event.setDateStart(startDate.getTime(), false);
+        } else {
+            event.setDateStart(startDate.getTime());
+        }
 
-        event.setDateStart(startDate.getTime());
-
-        if (endDate == null && StringUtils.isBlank(duration)) {
+        if (!fullDays && endDate == null && StringUtils.isBlank(duration)) {
             throw new IllegalArgumentException("Both endDate and duration cannot be empty");
         }
         if (endDate != null) {
             event.setDateEnd(endDate.getTime());
-        } else {
+            if(fullDays) {
+                event.setDateEnd(endDate.getTime(), false);
+            } else {
+                event.setDateEnd(endDate.getTime());
+            }
+        } else if(StringUtils.isNotBlank(duration)) {
             event.setDuration(Duration.parse(duration));
         }
 
@@ -112,7 +130,15 @@ public class CreateICS {
         if (StringUtils.isNotBlank(organizerMail)) {
             event.setOrganizer(organizerMail);
         }
-
+        
+        if(StringUtils.isNotBlank(attendees)) {
+            String [] attendeesArray = attendees.split(",");
+            for(String attendee : attendeesArray) {
+                attendee = attendee.trim();
+                event.addAttendee(attendee);
+            }
+        }
+        
         event.setUid(java.util.UUID.randomUUID().toString());
 
         ical.addEvent(event);
