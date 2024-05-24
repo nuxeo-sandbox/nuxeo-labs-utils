@@ -23,11 +23,12 @@ import biweekly.ICalendar;
 import biweekly.component.VAlarm;
 import biweekly.component.VEvent;
 import biweekly.io.text.ICalWriter;
-import biweekly.property.DateStart;
-import biweekly.property.Description;
+import biweekly.parameter.Related;
+import biweekly.property.Trigger;
 import biweekly.util.Duration;
 
 import org.apache.commons.lang3.StringUtils;
+import org.nuxeo.common.utils.PeriodAndDuration;
 import org.nuxeo.ecm.automation.core.Constants;
 import org.nuxeo.ecm.automation.core.annotations.Operation;
 import org.nuxeo.ecm.automation.core.annotations.OperationMethod;
@@ -37,11 +38,10 @@ import org.nuxeo.ecm.core.api.Blobs;
 import org.nuxeo.ecm.core.api.NuxeoException;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.Calendar;
 
 /**
- * Return a blob, an .ics file buyilt from the parameters
+ * Return a blob, an .ics file built from the parameters
  * 
  * @since 2023.11
  */
@@ -50,7 +50,8 @@ import java.util.Calendar;
         + " For the end date, you can pass either endDate or duration, which is a java Period (like PT1H30M)."
         + " Also, if fullDays is true, endDate and duration are optional"
         + " location is string, like 'Room 1'. Can be a link to a Zoom or Teams meeting, etc."
-        + " attendees is a list of emails, separated by a comma"
+        + " attendees is a list of emails, separated by a comma."
+        + " alarm is a java period, only days, hours and minutes accepted. P1DT2H30M (1 day, 2 hours, 30mn)"
         + " Warning: dates must be provided either as Java Calendar object or an ISO date string, make sure to specify a timezone.")
 public class CreateICS {
 
@@ -85,6 +86,9 @@ public class CreateICS {
     
     @Param(name = "attendees", required = false)
     String attendees;
+    
+    @Param(name = "alarm", required = false)
+    protected String alarm;
 
     @OperationMethod
     public Blob run() {
@@ -137,6 +141,23 @@ public class CreateICS {
                 attendee = attendee.trim();
                 event.addAttendee(attendee);
             }
+        }
+        
+        if (StringUtils.isNotBlank(alarm)) {
+            PeriodAndDuration pd = PeriodAndDuration.parse(alarm);
+            int days = Math.abs(pd.period.getDays());
+            int hours = Math.abs(pd.duration.toHoursPart());
+            int minutes = Math.abs(pd.duration.toMinutesPart());
+            
+            Duration duration = Duration.builder()
+                                        .prior(true)
+                                        .days(days)
+                                        .hours(hours)
+                                        .minutes(minutes)
+                                        .build();
+            Trigger trigger = new Trigger(duration, Related.START);
+            VAlarm eventAlarm = VAlarm.display(trigger, "");
+            event.addAlarm(eventAlarm);
         }
         
         event.setUid(java.util.UUID.randomUUID().toString());

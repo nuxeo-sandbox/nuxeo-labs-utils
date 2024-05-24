@@ -197,6 +197,7 @@ function run(input, params) {
     * `url`: String, optional, additional information on a website
     * `organizerMail`: String, optional, the email of the organizer
     * `attendees`: String, optional. List of mail addresses, separated with a comma
+    * `alarm`: String, optional. A Java period. Handles only days, hours and minutes (others will be ignored). For example "PT1H" for an alert one hour before the meeting.
   * The operation returns a blob containing the .ics file which can then be imported to a Calendar (Outlook, Google Calendar, Apple Calendar, ...)
   * ⚠️ Little warning: Depending on the calendar tool used, some fields may not be imported, or may behave differently.
   * **Examples using JS Automation** (input `void`,  output `blob`)
@@ -219,7 +220,8 @@ function run(input, params) {
       "startDate": "2024-05-28",
       "duration": "PT3D",
       "location": "Somewhere",
-      "attendees": "someone@abc.def, other@ghi.jkl, onemore@mno.pqr"
+      "attendees": "someone@abc.def, other@ghi.jkl, onemore@mno.pqr",
+      "alarm": "P1DT1H"  // One day one hour before
     });
   
   return icsBlob;
