@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.nuxeo.labs.utils</groupId>
     <artifactId>nuxeo-labs-utils-parent</artifactId>
-    <version>1.6-SNAPSHOT</version>
+    <version>1.7-SNAPSHOT</version>
   </parent>
   <artifactId>nuxeo-labs-utils-core</artifactId>
   <name>Nuxeo labs utils core</name>

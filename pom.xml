@@ -9,7 +9,7 @@
 
   <groupId>org.nuxeo.labs.utils</groupId>
   <artifactId>nuxeo-labs-utils-parent</artifactId>
-  <version>1.6-SNAPSHOT</version>
+  <version>1.7-SNAPSHOT</version>
   <name>Nuxeo labs utils parent</name>
   <description />
   <packaging>pom</packaging>
