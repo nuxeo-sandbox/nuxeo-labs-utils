@@ -5,10 +5,7 @@
 This plugin contains miscellaneous utilities, mainly operations.
 
 > [!IMPORTANT]
-> This plugin is not the same as [nuxeo-labs](https://github.com/nuxeo/nuxeo-labs){:target="_blank"}, which contains other utilities.
->
-> This plugin is not the same as <a href="https://github.com/nuxeo/nuxeo-labs" target="_blank">nuxeo-labs</a>, which contains other utilities.
-
+> This plugin is not the same as [nuxeo-labs](https://github.com/nuxeo/nuxeo-labs), which contains other utilities.
 
 * **Operations**
   * Operations on Images
