@@ -195,7 +195,7 @@ function run(input, params) {
     * `description`: String, optional, additional information.
     * `location`: String, optional, the location (`"Room #1"` - this is not _geo_ location. Can be a link to a Zoom/Teams/etc. meeting)
     * `url`: String, optional, additional information on a website
-    * `organizerMail`: String, optional, the email of the organizer
+    * `organizerMail`: String, optional, the email of the organizer. If not passed, most calendar applications will consider current user as the organizer
     * `attendees`: String, optional. List of mail addresses, separated with a comma
     * `alarm`: String, optional. A Java period. Handles only days, hours and minutes (others will be ignored). For example "PT1H" for an alert one hour before the meeting.
   * The operation returns a blob containing the .ics file which can then be imported to a Calendar (Outlook, Google Calendar, Apple Calendar, ...)

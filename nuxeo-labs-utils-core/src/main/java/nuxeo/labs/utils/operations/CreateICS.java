@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2022 Hyland (http://hyland.com/) and others.
+ * (C) Copyright 2024 Hyland (http://hyland.com/) and others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,7 +49,8 @@ import java.util.Calendar;
         + "Creates an .ics blob from the parameters. label and startDate are required."
         + " For the end date, you can pass either endDate or duration, which is a java Period (like PT1H30M)."
         + " Also, if fullDays is true, endDate and duration are optional"
-        + " location is string, like 'Room 1'. Can be a link to a Zoom or Teams meeting, etc."
+        + " location is a string, like 'Room 1'. Can be a link to a Zoom or Teams meeting, etc."
+        + " organizerMail is a string. If not passed, most calendar applications will consider current user as the organizer."
         + " attendees is a list of emails, separated by a comma."
         + " alarm is a java period, only days, hours and minutes accepted. P1DT2H30M (1 day, 2 hours, 30mn)"
         + " Warning: dates must be provided either as Java Calendar object or an ISO date string, make sure to specify a timezone.")
