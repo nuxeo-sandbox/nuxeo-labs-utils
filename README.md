@@ -2,7 +2,7 @@
 
  
 ## Description
-This plugin contains miscellaneous utilities, mainly operations.
+This plugin contains miscellaneous utilities, mainly operations. The original goal for most of them is to avoid using "Java in JS Automation" (see the [documentation](https://doc.nuxeo.com/nxdoc/automation-scripting/#java-objects-in-automation-scripting)).
 
 > [!IMPORTANT]
 > This plugin is not the same as [nuxeo-labs](https://github.com/nuxeo/nuxeo-labs), which contains other utilities.
@@ -329,7 +329,7 @@ This is a moving project (no API maintenance, no deprecation process, etc.) If a
 
 [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0)
 
-This plugin uses a java library, [biweekly](https://github.com/mangstadt/biweekly). License is business friendly (use it as you want, with the license disclaimer, see below).
+For handling .icl files, this plugin uses a java library, [biweekly](https://github.com/mangstadt/biweekly). Its license is business friendly (use it as you want, with the license disclaimer, see below).
 
 
 ## About Nuxeo
