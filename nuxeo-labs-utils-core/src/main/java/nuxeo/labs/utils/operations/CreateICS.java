@@ -28,6 +28,7 @@ import biweekly.property.Trigger;
 import biweekly.util.Duration;
 
 import org.apache.commons.lang3.StringUtils;
+import org.nuxeo.common.utils.FileUtils;
 import org.nuxeo.common.utils.PeriodAndDuration;
 import org.nuxeo.ecm.automation.core.Constants;
 import org.nuxeo.ecm.automation.core.annotations.Operation;
@@ -172,6 +173,8 @@ public class CreateICS {
             try (ICalWriter iCalWriter = new ICalWriter(icsBlob.getFile(), ICalVersion.V2_0)) {
                 iCalWriter.write(ical);
                 icsBlob.setMimeType("text/calendar");
+                // Cool to use Nuxeo utilities :-)
+                label = FileUtils.getSafeFilename(label);
                 icsBlob.setFilename(label + ".ics");
 
             } catch (IOException e) {
@@ -179,7 +182,7 @@ public class CreateICS {
             }
 
         } catch (IOException e) {
-            throw new NuxeoException("Error creatin/writing the ics file", e);
+            throw new NuxeoException("Error creating/writing the ics file", e);
         }
 
         return icsBlob;
