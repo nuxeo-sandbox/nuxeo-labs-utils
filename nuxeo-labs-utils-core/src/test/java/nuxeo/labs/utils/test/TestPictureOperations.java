@@ -23,21 +23,31 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.nuxeo.common.utils.FileUtils;
 import org.nuxeo.ecm.automation.AutomationService;
 import org.nuxeo.ecm.automation.OperationContext;
 import org.nuxeo.ecm.automation.OperationException;
 import org.nuxeo.ecm.automation.test.AutomationFeature;
 import org.nuxeo.ecm.core.api.Blob;
+import org.nuxeo.ecm.core.api.Blobs;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
+import org.nuxeo.ecm.core.api.blobholder.BlobHolder;
+import org.nuxeo.ecm.core.api.blobholder.SimpleBlobHolder;
+import org.nuxeo.ecm.core.convert.api.ConversionService;
 import org.nuxeo.ecm.core.test.DefaultRepositoryInit;
 import org.nuxeo.ecm.core.test.annotations.Granularity;
 import org.nuxeo.ecm.core.test.annotations.RepositoryConfig;
@@ -82,6 +92,9 @@ public class TestPictureOperations {
 
     @Inject
     protected TransactionalFeature txFeature;
+
+    @Inject
+    ConversionService conversionService;
 
     @Test
     public void shouldGetPictureInfo() throws Exception {
@@ -208,6 +221,34 @@ public class TestPictureOperations {
         
         assertEquals(originalW, newH);
         assertEquals(originalH, newW);
+        
+    }
+    
+    @Test
+    public void TestConcatenateImageConverter() throws Exception {
+        
+        List<Blob> twoBlobs = new ArrayList<Blob>();
+        
+        File f = FileUtils.getResourceFileFromContext("files/Chrysanthemum.jpg");
+        Blob blob = Blobs.createBlob(f, "image/jpeg");
+        twoBlobs.add(blob);
+        
+        f = FileUtils.getResourceFileFromContext("files/Desert.jpg");
+        blob = Blobs.createBlob(f, "image/jpeg");
+        twoBlobs.add(blob);
+        
+        SimpleBlobHolder sbh = new SimpleBlobHolder(twoBlobs);
+        
+        Map<String, Serializable> params = new HashMap<>();
+        params.put("targetFileName", "final.jpg");
+
+        params.put("destMimeType", "image/jpeg");
+        
+        //params.put("horizontalAppend", "true");// All params must be strings
+
+        BlobHolder result = conversionService.convert("concatenateImages", sbh, params);
+        Blob resultBlob = result.getBlob();
+        Assert.assertNotNull(resultBlob);
         
     }
 }

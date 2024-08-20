@@ -10,6 +10,7 @@
     <operation class="nuxeo.labs.utils.operations.pictures.PictureRemoveFromViews" />
     <operation class="nuxeo.labs.utils.operations.pictures.PictureCrop" />
     <operation class="nuxeo.labs.utils.operations.pictures.PictureRotate" />
+    <operation class="nuxeo.labs.utils.operations.pictures.ConcatenateImages" />
     <!--  Videos -->
     <operation class="nuxeo.labs.utils.operations.videos.VideoGetInfo" />
     <operation class="nuxeo.labs.utils.operations.videos.VideoAddToTranscodedVideos" />

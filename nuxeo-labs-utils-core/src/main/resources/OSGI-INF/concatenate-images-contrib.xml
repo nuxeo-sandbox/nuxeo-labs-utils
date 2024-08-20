@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<component name="nuxeo.labs.utils.concatenateimages.contrib">
+
+	<require>org.nuxeo.ecm.platform.picture.commandline.imagemagick</require>
+
+	<extension
+		target="org.nuxeo.ecm.platform.commandline.executor.service.CommandLineExecutorComponent"
+		point="command">
+		<command name="concatenateImages" enabled="true">
+			<commandLine>convert</commandLine>
+			<!-- need to set tagetFileName, nuxeo calculates targetFilePath-->
+			<parameterString>#{image1Path} #{image2Path} #{HorV}append #{targetFilePath}</parameterString>
+			<winParameterString>#{image1Path} #{image2Path} #{HorV}append #{targetFilePath}</winParameterString>
+			<installationDirective>You need to install ImageMagick.</installationDirective>
+		</command>
+	</extension>
+
+	<extension point="converter"
+		target="org.nuxeo.ecm.core.convert.service.ConversionServiceImpl">
+		<converter
+			class="nuxeo.labs.utils.operations.pictures.ConcatenateImagesConverter"
+			name="concatenateImages">
+			<sourceMimeType>image/*</sourceMimeType>
+			<!-- Final myme type will be set based on the mimeType converter parameter -->
+			<destinationMimeType>image/*</destinationMimeType>
+			<parameters>
+				<parameter name="CommandLineName">concatenateImages</parameter>
+			</parameters>
+		</converter>
+	</extension>
+</component>

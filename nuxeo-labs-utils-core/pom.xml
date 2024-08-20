@@ -50,6 +50,11 @@
       <scope>provided</scope>
     </dependency>
     -->
+    <dependency>
+      <groupId>org.nuxeo.template.rendering</groupId>
+      <artifactId>nuxeo-template-rendering-core-dependencies</artifactId>
+      <type>pom</type>
+    </dependency>
 
 
     <!-- Test -->

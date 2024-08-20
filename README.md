@@ -14,6 +14,7 @@ This plugin contains miscellaneous utilities, mainly operations. The original go
     * Document > Labs.RemoveFromViews
     * Conversion > Labs.PictureCrop
     * Conversion > Labs.PictureRotate
+    * Conversion > Labs.ConcatenateImages
   * Operations on Videos
     * Conversion > Labs.VideoGetInfo
     * Document > Labs.VideoAddToTranscodedVideos
@@ -96,6 +97,16 @@ function run(input, params) {
   * Parameters
     * `angle`: Integer, required
   * Uses the default [Nuxeo `ImagingService`](https://github.com/nuxeo/nuxeo/blob/2021/modules/platform/nuxeo-platform-imaging/nuxeo-platform-imaging-core/src/main/java/org/nuxeo/ecm/platform/picture/api/ImagingService.java) and its related [CommandLine Converter contribution](https://github.com/nuxeo/nuxeo/blob/2021/modules/platform/nuxeo-platform-imaging/nuxeo-platform-imaging-core/src/main/resources/OSGI-INF/commandline-imagemagick-contrib.xml) to ImageMagick.
+
+* `Conversion > Labs.ConcatenateImages`
+  * The operation concatenates images, appending one after the other, and return the result blob.
+  * input:
+    * `blobs` (list of blobs)
+    * Or a `document`. If a `document`, the operation uses exclusively the blobs found at `files:files`.
+  * Parameters:
+    * `targetFileName`: required, The name of the resulting file, which must contains the file extension (so ImageMagick knows what to do).
+    * `destMimeType`, required. The mime type of the resulting blob
+    * `concatHorizontally`, boolean. Default is `false` and images ar appended vertically one after the other.
 
 
 
