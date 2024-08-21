@@ -40,6 +40,7 @@ import org.nuxeo.common.utils.FileUtils;
 import org.nuxeo.ecm.automation.AutomationService;
 import org.nuxeo.ecm.automation.OperationContext;
 import org.nuxeo.ecm.automation.OperationException;
+import org.nuxeo.ecm.automation.core.util.BlobList;
 import org.nuxeo.ecm.automation.test.AutomationFeature;
 import org.nuxeo.ecm.core.api.Blob;
 import org.nuxeo.ecm.core.api.Blobs;
@@ -61,6 +62,7 @@ import org.nuxeo.runtime.test.runner.Features;
 import org.nuxeo.runtime.test.runner.FeaturesRunner;
 import org.nuxeo.runtime.test.runner.TransactionalFeature;
 
+import nuxeo.labs.utils.operations.pictures.ConcatenateImages;
 import nuxeo.labs.utils.operations.pictures.PictureAddToViews;
 import nuxeo.labs.utils.operations.pictures.PictureCrop;
 import nuxeo.labs.utils.operations.pictures.PictureGetInfo;
@@ -225,7 +227,7 @@ public class TestPictureOperations {
     }
     
     @Test
-    public void TestConcatenateImageConverter() throws Exception {
+    public void TestConcatenateImagesConverter() throws Exception {
         
         List<Blob> twoBlobs = new ArrayList<Blob>();
         
@@ -251,4 +253,33 @@ public class TestPictureOperations {
         Assert.assertNotNull(resultBlob);
         
     }
+    
+    @Test
+    public void TestConcatenateImagesOperation() throws Exception {
+        
+        List<Blob> twoBlobs = new ArrayList<Blob>();
+        
+        File f = FileUtils.getResourceFileFromContext("files/Chrysanthemum.jpg");
+        Blob blob = Blobs.createBlob(f, "image/jpeg");
+        twoBlobs.add(blob);
+        
+        f = FileUtils.getResourceFileFromContext("files/Desert.jpg");
+        blob = Blobs.createBlob(f, "image/jpeg");
+        twoBlobs.add(blob);
+        
+        BlobList blobList = new BlobList(twoBlobs);
+        
+        OperationContext ctx = new OperationContext(session);
+        ctx.setInput(blobList);
+        Map<String, Object> params = new HashMap<>();
+        params.put("targetFileName", "final.jpg");
+        params.put("destMimeType", "image/jpeg");
+        Blob result = (Blob) automationService.run(ctx, ConcatenateImages.ID, params);
+        
+        Assert.assertNotNull(result);
+        System.out.println(result.getMimeType());
+        System.out.println(result.getFilename());
+        
+    }
+    
 }

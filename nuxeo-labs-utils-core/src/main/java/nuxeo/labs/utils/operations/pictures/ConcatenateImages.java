@@ -65,7 +65,7 @@ public class ConcatenateImages {
     @Param(name = "destMimeType", required = true)
     protected String destMimeType;
 
-    @Param(name = "concatHorizontally")
+    @Param(name = "concatHorizontally", required = false)
     protected Boolean concatHorizontally = false;
 
     @OperationMethod
