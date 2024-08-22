@@ -13,6 +13,18 @@
 			<winParameterString>#{image1Path} #{image2Path} #{HorV}append #{targetFilePath}</winParameterString>
 			<installationDirective>You need to install ImageMagick.</installationDirective>
 		</command>
+
+		<!-- Simple converter based on file extension
+		     As it will be used with the CommandLineConverter, it must have some expected
+		     variables (sourceFilePath and targetFilePath)
+		 -->
+		<command name="converter" enabled="true">
+			<commandLine>convert</commandLine>
+			<parameterString>-define registry:temporary-path=#{nuxeo.tmp.dir} -quiet #{sourceFilePath}[0] #{targetFilePath}</parameterString>
+			<winParameterString>-define registry:temporary-path=#{nuxeo.tmp.dir} -quiet #{sourceFilePath}[0] #{targetFilePath}</winParameterString>
+			<installationDirective>You need to install ImageMagick.</installationDirective>
+		</command>
+
 	</extension>
 
 	<extension point="converter"
@@ -21,10 +33,27 @@
 			class="nuxeo.labs.utils.operations.pictures.ConcatenateImagesConverter"
 			name="concatenateImages">
 			<sourceMimeType>image/*</sourceMimeType>
-			<!-- Final myme type will be set based on the mimeType converter parameter -->
+			<!-- Final myme type will be set based on the mimeType converter
+			parameter -->
 			<destinationMimeType>image/*</destinationMimeType>
 			<parameters>
 				<parameter name="CommandLineName">concatenateImages</parameter>
+			</parameters>
+		</converter>
+
+		<!-- Simple converter based on file extension
+		     We just use the default "converter" commanLine contribution of the platform
+		     (see commandline-imagemagick-convert-contrib.xml)
+		     This converter can hen be used with Blob.RunConverter (using the CommandLineConverter class)
+		-->
+		<converter
+			class="org.nuxeo.ecm.platform.convert.plugins.CommandLineConverter"
+			name="simpleConverterByFileName">
+			<sourceMimeType>image/*</sourceMimeType>
+			<!-- Final myme type will be set based on the mimeType converter
+			parameter -->
+			<parameters>
+				<parameter name="CommandLineName">converter</parameter>
 			</parameters>
 		</converter>
 	</extension>

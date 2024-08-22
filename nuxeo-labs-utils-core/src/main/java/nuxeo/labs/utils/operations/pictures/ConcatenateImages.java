@@ -24,6 +24,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.nuxeo.ecm.automation.core.Constants;
@@ -96,7 +98,26 @@ public class ConcatenateImages {
         }
 
         if (blobs.size() == 1) {
-            return blobs.get(0);
+            // Check if we must convert. We convert if file extension of mimetype are not the same
+            Blob blob = blobs.get(0);
+            String fileName = blob.getFilename();
+            if(fileName == null) {
+                fileName = "";
+            }
+            String ext = FilenameUtils.getExtension(fileName).toLowerCase();
+            String destExt = FilenameUtils.getExtension(targetFileName).toLowerCase();
+            String mimeType = blob.getMimeType();
+            Blob convertedBlob = null;
+            if(!StringUtils.equals(ext, destExt) || !StringUtils.equals(mimeType, destMimeType)) {
+                Map<String, Serializable> params = new HashMap<>();
+                params.put("targetFileName", targetFileName);
+                BlobHolder holder = conversionService.convert("simpleConverterByFileName", new SimpleBlobHolder(blob), params);
+                convertedBlob = holder.getBlob();
+            } else {
+                convertedBlob = blob;
+            }
+            
+            return convertedBlob;
         }
 
         // Concat first 2 ones

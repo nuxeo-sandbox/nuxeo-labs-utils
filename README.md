@@ -107,6 +107,7 @@ function run(input, params) {
     * `targetFileName`: required, The name of the resulting file, which must contains the file extension (so ImageMagick knows what to do).
     * `destMimeType`, required. The mime type of the resulting blob
     * `concatHorizontally`, boolean. Default is `false` and images ar appended vertically one after the other.
+  * If there is only one blob, it will just be converted to the new file extension/mimetype (if it already has the same extension, same mime type, hte source blob itself is returned)
 
 
 

@@ -20,6 +20,7 @@ package nuxeo.labs.utils.test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -62,6 +63,9 @@ import org.nuxeo.runtime.test.runner.Features;
 import org.nuxeo.runtime.test.runner.FeaturesRunner;
 import org.nuxeo.runtime.test.runner.TransactionalFeature;
 
+import com.google.common.hash.Hashing;
+import com.google.common.io.Files;
+
 import nuxeo.labs.utils.operations.pictures.ConcatenateImages;
 import nuxeo.labs.utils.operations.pictures.PictureAddToViews;
 import nuxeo.labs.utils.operations.pictures.PictureCrop;
@@ -73,7 +77,7 @@ import nuxeo.labs.utils.operations.pictures.PictureRotate;
  *
  */
 @RunWith(FeaturesRunner.class)
-@Features({AutomationFeature.class, ImagingFeature.class})
+@Features({ AutomationFeature.class, ImagingFeature.class })
 @RepositoryConfig(init = DefaultRepositoryInit.class, cleanup = Granularity.METHOD)
 @Deploy("org.nuxeo.ecm.platform.commandline.executor")
 @Deploy("org.nuxeo.ecm.platform.picture.core")
@@ -120,10 +124,10 @@ public class TestPictureOperations {
 
     @Test
     public void shouldAddtoView() throws Exception {
-        
+
         Blob input = TestUtils.createBlobFromTestImage();
         DocumentModel doc = TestUtils.createPictureWithTestImage(session, txFeature, input, true);
-        
+
         // Check they were computed
         doc.refresh();
         assertNotNull(doc.getPropertyValue("picture:views"));
@@ -144,16 +148,16 @@ public class TestPictureOperations {
         PictureView view = adapter.getView("new-view");
         assertNotNull(view);
         assertEquals(input.getDigest(), view.getBlob().getDigest());
-        
+
     }
 
     @Test
     public void shouldRemoveFromViewWithSave() throws Exception {
-        
+
         DocumentModel doc = TestUtils.createPictureWithTestImage(session, txFeature, null, true);
         MultiviewPictureAdapter adapter = new MultiviewPictureAdapter(doc);
         assertNotNull(adapter.getView("Small")); // One of the default rendition
-        
+
         OperationContext ctx = new OperationContext(session);
         ctx.setInput(doc);
         Map<String, Object> params = new HashMap<>();
@@ -162,16 +166,16 @@ public class TestPictureOperations {
         doc = (DocumentModel) automationService.run(ctx, PictureRemoveFromViews.ID, params);
         adapter = new MultiviewPictureAdapter(doc);
         assertNull(adapter.getView("Small"));
-        
+
     }
 
     @Test
     public void shouldRemoveFromViewCaseInsensitive() throws Exception {
-        
+
         DocumentModel doc = TestUtils.createPictureWithTestImage(session, txFeature, null, true);
         MultiviewPictureAdapter adapter = new MultiviewPictureAdapter(doc);
         assertNotNull(adapter.getView("Small")); // One of the default rendition
-        
+
         OperationContext ctx = new OperationContext(session);
         ctx.setInput(doc);
         Map<String, Object> params = new HashMap<>();
@@ -179,12 +183,12 @@ public class TestPictureOperations {
         doc = (DocumentModel) automationService.run(ctx, PictureRemoveFromViews.ID, params);
         adapter = new MultiviewPictureAdapter(doc);
         assertNull(adapter.getView("Small"));
-        
+
     }
-    
+
     @Test
     public void shouldCropImage() throws Exception {
-        
+
         Blob input = TestUtils.createBlobFromTestImage();
 
         OperationContext ctx = new OperationContext(session);
@@ -198,12 +202,12 @@ public class TestPictureOperations {
         ImageInfo ii = imagingService.getImageInfo(cropped);
         assertEquals(ii.getWidth(), 100);
         assertEquals(ii.getHeight(), 110);
-        
+
     }
-    
+
     @Test
     public void shouldRotateAnImage() throws Exception {
-        
+
         Blob input = TestUtils.createBlobFromTestImage();
 
         ImageInfo ii = imagingService.getImageInfo(input);
@@ -220,66 +224,124 @@ public class TestPictureOperations {
         ii = imagingService.getImageInfo(rotated);
         int newW = ii.getWidth();
         int newH = ii.getHeight();
-        
+
         assertEquals(originalW, newH);
         assertEquals(originalH, newW);
-        
-    }
-    
-    @Test
-    public void TestConcatenateImagesConverter() throws Exception {
-        
-        List<Blob> twoBlobs = new ArrayList<Blob>();
-        
-        File f = FileUtils.getResourceFileFromContext("files/Chrysanthemum.jpg");
-        Blob blob = Blobs.createBlob(f, "image/jpeg");
-        twoBlobs.add(blob);
-        
-        f = FileUtils.getResourceFileFromContext("files/Desert.jpg");
-        blob = Blobs.createBlob(f, "image/jpeg");
-        twoBlobs.add(blob);
-        
-        SimpleBlobHolder sbh = new SimpleBlobHolder(twoBlobs);
-        
-        Map<String, Serializable> params = new HashMap<>();
-        params.put("targetFileName", "final.jpg");
 
-        params.put("destMimeType", "image/jpeg");
-        
-        //params.put("horizontalAppend", "true");// All params must be strings
-
-        BlobHolder result = conversionService.convert("concatenateImages", sbh, params);
-        Blob resultBlob = result.getBlob();
-        Assert.assertNotNull(resultBlob);
-        
     }
-    
+
     @Test
     public void TestConcatenateImagesOperation() throws Exception {
-        
+
         List<Blob> twoBlobs = new ArrayList<Blob>();
-        
+
         File f = FileUtils.getResourceFileFromContext("files/Chrysanthemum.jpg");
         Blob blob = Blobs.createBlob(f, "image/jpeg");
         twoBlobs.add(blob);
-        
+
         f = FileUtils.getResourceFileFromContext("files/Desert.jpg");
         blob = Blobs.createBlob(f, "image/jpeg");
         twoBlobs.add(blob);
-        
+
         BlobList blobList = new BlobList(twoBlobs);
-        
+
         OperationContext ctx = new OperationContext(session);
         ctx.setInput(blobList);
         Map<String, Object> params = new HashMap<>();
         params.put("targetFileName", "final.jpg");
         params.put("destMimeType", "image/jpeg");
         Blob result = (Blob) automationService.run(ctx, ConcatenateImages.ID, params);
-        
+
         Assert.assertNotNull(result);
-        System.out.println(result.getMimeType());
-        System.out.println(result.getFilename());
-        
+
+
     }
-    
+
+    @Test
+    public void TestConcatenateImagesOperationWith1ImageShouldNotConvert() throws Exception {
+
+        List<Blob> blobs = new ArrayList<Blob>();
+
+        File f = FileUtils.getResourceFileFromContext("files/Chrysanthemum.jpg");
+        Blob blob = Blobs.createBlob(f, "image/jpeg");
+        blobs.add(blob);
+
+        BlobList blobList = new BlobList(blobs);
+
+        OperationContext ctx = new OperationContext(session);
+        ctx.setInput(blobList);
+        Map<String, Object> params = new HashMap<>();
+        params.put("targetFileName", "final.jpg");
+        params.put("destMimeType", "image/jpeg");
+        Blob result = (Blob) automationService.run(ctx, ConcatenateImages.ID, params);
+
+        Assert.assertNotNull(result);
+        // here the operation should have done nothing, we wanted
+        // the same file extension, same mimetype => operation should have returned the blob
+        String sourceHash = Files.asByteSource(f).hash(Hashing.md5()).toString();
+        File resultFile = result.getFile();
+        String resultHash = Files.asByteSource(resultFile).hash(Hashing.md5()).toString();
+        assertEquals(sourceHash, resultHash);
+
+    }
+
+    @Test
+    public void TestConcatenateImagesOperationWith1ImageShouldConvert() throws Exception {
+
+        List<Blob> blobs = new ArrayList<Blob>();
+
+        File f = FileUtils.getResourceFileFromContext("files/Chrysanthemum.jpg");
+        Blob blob = Blobs.createBlob(f, "image/jpeg");
+        blobs.add(blob);
+
+        BlobList blobList = new BlobList(blobs);
+
+        OperationContext ctx = new OperationContext(session);
+        ctx.setInput(blobList);
+        Map<String, Object> params = new HashMap<>();
+        params.put("targetFileName", "final.png");
+        params.put("destMimeType", "image/png");
+        Blob result = (Blob) automationService.run(ctx, ConcatenateImages.ID, params);
+
+        Assert.assertNotNull(result);
+        // here the operation should have done nothing, we wanted
+        // the same file extension, same mimetype => operation should have returned the blob
+        String sourceHash = Files.asByteSource(f).hash(Hashing.md5()).toString();
+        File resultFile = result.getFile();
+        String resultHash = Files.asByteSource(resultFile).hash(Hashing.md5()).toString();
+        assertNotSame(sourceHash, resultHash);
+
+    }
+
+    // ============================================================= Test concverter.
+    // TODO Move to separate test file)
+    // =============================================================
+    @Test
+    public void TestConcatenateImagesConverter() throws Exception {
+
+        List<Blob> twoBlobs = new ArrayList<Blob>();
+
+        File f = FileUtils.getResourceFileFromContext("files/Chrysanthemum.jpg");
+        Blob blob = Blobs.createBlob(f, "image/jpeg");
+        twoBlobs.add(blob);
+
+        f = FileUtils.getResourceFileFromContext("files/Desert.jpg");
+        blob = Blobs.createBlob(f, "image/jpeg");
+        twoBlobs.add(blob);
+
+        SimpleBlobHolder sbh = new SimpleBlobHolder(twoBlobs);
+
+        Map<String, Serializable> params = new HashMap<>();
+        params.put("targetFileName", "final.jpg");
+
+        params.put("destMimeType", "image/jpeg");
+
+        // params.put("horizontalAppend", "true");// All params must be strings
+
+        BlobHolder result = conversionService.convert("concatenateImages", sbh, params);
+        Blob resultBlob = result.getBlob();
+        Assert.assertNotNull(resultBlob);
+
+    }
+
 }
