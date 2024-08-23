@@ -99,7 +99,7 @@ public class ConcatenateImages {
         }
 
         if (blobs.size() == 1) {
-            // Check if we must convert. We convert if file extension of mimetype are not the same
+            // Check if we must convert. We convert if file extension or mimetype are not the same
             Blob blob = blobs.get(0);
             String fileName = blob.getFilename();
             if(fileName == null) {
@@ -107,6 +107,10 @@ public class ConcatenateImages {
             }
             String ext = FilenameUtils.getExtension(fileName).toLowerCase();
             String destExt = FilenameUtils.getExtension(targetFileName).toLowerCase();
+            // Special case for jpeg
+            if(StringUtils.equalsAny(ext, "jpg", "jpeg") && StringUtils.equalsAny(destExt, "jpg", "jpeg")) {
+                ext = destExt;
+            }
             String mimeType = blob.getMimeType();
             Blob convertedBlob = null;
             if(!StringUtils.equals(ext, destExt) || !StringUtils.equals(mimeType, destMimeType)) {
