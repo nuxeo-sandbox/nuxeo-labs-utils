@@ -76,6 +76,7 @@ public class ConcatenateImages {
         Blob result = null;
 
         ArrayList<Blob> blobs = new ArrayList<Blob>();
+        @SuppressWarnings("unchecked")
         List<Map<String, Serializable>> files = (List<Map<String, Serializable>>) input.getPropertyValue(DEFAULT_XPATH);
         for (Map<String, Serializable> map : files) {
             Blob blob = (Blob) map.get("file");

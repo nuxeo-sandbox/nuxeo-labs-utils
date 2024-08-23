@@ -24,8 +24,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
 import java.util.HashMap;
 import java.util.Map;
 

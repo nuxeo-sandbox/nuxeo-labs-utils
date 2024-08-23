@@ -40,8 +40,9 @@ public class ConcatenateImagesConverter extends CommandLineConverter {
      * "targetFileName" is required. Just the file name _with its extension_
      * "horizontalAppend" (optional): by default, we append vertically. If horizontalAppend is passed
      * and true, we append horizontally
-     * WARNING: The class handles only 2 files, anc concatenate appends the 2d after the first in the blobHolder.
-     * To concatenate more, just re-call the converter with the result of previous conversion
+     * WARNING: The class handles only 2 files, and appends the 2d after the first in the blobHolder.
+     * To concatenate more, just re-call the converter with the result of previous conversion. See
+     * an exemple in the operation {@code ConcatenateImages}
      */
     @Override
     public BlobHolder convert(BlobHolder blobHolder, Map<String, Serializable> parameters) throws ConversionException {
@@ -69,7 +70,7 @@ public class ConcatenateImagesConverter extends CommandLineConverter {
         } else {
             parameters.put("HorV", "-");
         }
-        
+
         BlobHolder result = super.convert(blobHolder, parameters);
         Blob resultBlob = result.getBlob();
         resultBlob.setMimeType(destMimeType);
