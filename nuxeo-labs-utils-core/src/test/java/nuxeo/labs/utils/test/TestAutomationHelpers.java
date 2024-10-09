@@ -22,6 +22,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,13 +31,17 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.nuxeo.common.utils.FileUtils;
 import org.nuxeo.ecm.automation.AutomationService;
 import org.nuxeo.ecm.automation.OperationContext;
+import org.nuxeo.ecm.automation.OperationException;
 import org.nuxeo.ecm.automation.context.ContextHelper;
 import org.nuxeo.ecm.automation.context.ContextService;
 import org.nuxeo.ecm.automation.test.AutomationFeature;
+import org.nuxeo.ecm.core.api.Blob;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
+import org.nuxeo.ecm.core.api.impl.blob.FileBlob;
 import org.nuxeo.ecm.core.test.DefaultRepositoryInit;
 import org.nuxeo.ecm.core.test.annotations.Granularity;
 import org.nuxeo.ecm.core.test.annotations.RepositoryConfig;
@@ -59,6 +64,8 @@ import nuxeo.labs.utils.automationhelpers.NxLabs;
 @Deploy("nuxeo.labs.utils.nuxeo-labs-utils-core")
 @Deploy("nuxeo.labs.utils.nuxeo-labs-utils-core:automation-scripting-contrib.xml")
 public class TestAutomationHelpers {
+    
+    protected static final String PDF_TEST_FILE_PATH = "lorem-ipsum.pdf";
 
     @Inject
     CoreSession session;
@@ -139,5 +146,48 @@ public class TestAutomationHelpers {
         assertEquals("Administrator", result); // No first/Last name
     }
     
+    @Test
+    public void shouldGetTheMD5OfABlob() throws OperationException {
+        
+        File testFile = FileUtils.getResourceFileFromContext(PDF_TEST_FILE_PATH);
+        Blob blob = new FileBlob(testFile);
+        
+        OperationContext ctx = new OperationContext(session);
+        ctx.setInput(blob);
+        // Chain defined in automation-scripting-contrib.xml
+        String result = (String) automationService.run(ctx, "TestHelpers.GetMD5");
+        
+        assertNotNull(result);
+        assertEquals("7d5bc8da9154e0d7470500c16b225459", result);
+    }
+    
+    @Test
+    public void shouldGetTheBase64OfABlob() throws OperationException {
+        
+        File testFile = FileUtils.getResourceFileFromContext(PDF_TEST_FILE_PATH);
+        Blob blob = new FileBlob(testFile);
+        
+        OperationContext ctx = new OperationContext(session);
+        ctx.setInput(blob);
+        // Chain defined in automation-scripting-contrib.xml
+        String result = (String) automationService.run(ctx, "TestHelpers.GetBase64Blob");
+        
+        assertNotNull(result);
+        assertTrue(result.length() > blob.getLength());
+
+    }
+    
+    @Test
+    public void shouldGetTheBase64OfAString() throws OperationException {
+        
+        OperationContext ctx = new OperationContext(session);
+        ctx.setInput("Hello there, Nuxeo rocks!");
+        // Chain defined in automation-scripting-contrib.xml
+        String result = (String) automationService.run(ctx, "TestHelpers.GetBase64String");
+        
+        assertNotNull(result);
+        assertEquals("SGVsbG8gdGhlcmUsIE51eGVvIHJvY2tzIQ==", result);
+
+    }
 
 }

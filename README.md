@@ -28,11 +28,13 @@ This plugin contains miscellaneous utilities, mainly operations. The original go
     * Services > Labs.CreateICS
 
 * **Automation Helpers**
-  * NxLabs.getFileEXtension
+  * NxLabs.getFileExtensionn
   * NxLabs.getBaseName
   * NxLabs.getUserFullName
   * NxLabs.commitAndStartTransaction
   * NxLabs.threadSleep
+  * NxLabs.md5
+  * NxLabs.base64
 
 * **Default Icon Thumbnail Factory**
   * Allows for displaying the default icon instead of calculating one
@@ -255,10 +257,14 @@ var extension = NxLabs.getFileExtension(blob.filename);
 var baseName = NxLabs.getBaseName(blob.filename);
 input["dc:title"] = baseName;
 . . .
+var base64 = NxLabs.base64(blob);
+bar base64Other = NxLabs.base64(input["dc:description"]);
+var md5 = NxLabs.md5(blob);
+. . .
 ```
 
-* `NxLabs.getFileEXtension`
-  * Parameter is a string, a full path.
+* `NxLabs.getFileExtension`
+  * Parameter is a `string`, a full or partial filepath.
   * returns a string, the file extension
   * This is a wrapper around `org.apache.commons.io.FilenameUtils#getExtension`, it hanldes null values and path with no extension:
      * foo.txt    --> "txt"
@@ -267,7 +273,7 @@ input["dc:title"] = baseName;
      * a/b/c      --> ""
 
 * `NxLabs.getBaseName`
-  * Parameter is a string, a full path.
+  * Parameter is a `string`, a full or partial filepath.
   * returns a string, the base name
   * This is a wrapper around `org.apache.commons.io.FilenameUtils#getBaseName`, it hanldes null values and invalid path:
      * a/b/c.txt --> c
@@ -276,20 +282,27 @@ input["dc:title"] = baseName;
      * a/b/c/    --> ""
 
 * `NxLabs.getUserFullName`
-  * Parameter is a string, the login of a user.
+  * Parameter is a `string`, the login of a user.
   * returns a string, the full name, firstName + " " + lastName
   * If one the value is empty, does not set the space in between
   * If both values are not set, returns the login (ex. "Administrator" in a blank new database with Nuxeo out of the box)
 
 * `NxLabs.commitAndStartTransaction`
-  * (No parametes)
+  * (No parameter)
   * Wrapper around the `TransationFeature` class.
   * Useful when looping and modifying several documents: databases don't like big transactions, so, for example, when looping on 10,000 documents, you want to commit the transaction every 50, 100 documents.
 
 * `NxLabs.threadSleep`
-  * Parameter is a long, the number of millisecons to pause the current thread
+  * Parameter is a `long`, the number of milliseconds to pause the current thread
   * This is a wrapper for `java.lang.Thread.sleep(long millis)` 
 
+* `NxLabs.md5`
+  * Parameter is a `blob`
+  * Return a String, the MD5 has of the blob (or `""` if the blob is `null`.)
+
+* `NxLabs.base64`
+  * Parameter can be either a `blob` or a `string`.
+  * Return a String, the Base64 encoding of the input (blob or string)
 
 ## Default Icon Thumbnail Factory
 
@@ -351,29 +364,6 @@ For handling .icl files, this plugin uses a java library, [biweekly](https://git
 
 ## biweekly framework license
 
-```
- Copyright (c) 2013-2024, Michael Angstadt
- All rights reserved.
-
- Redistribution and use in source and binary forms, with or without
- modification, are permitted provided that the following conditions are met: 
-
- 1. Redistributions of source code must retain the above copyright notice, this
- list of conditions and the following disclaimer. 
- 2. Redistributions in binary form must reproduce the above copyright notice,
- this list of conditions and the following disclaimer in the documentation
- and/or other materials provided with the distribution. 
-
- THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
- ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- ```
+[Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html)
 
 

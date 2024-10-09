@@ -18,13 +18,21 @@
  */
 package nuxeo.labs.utils.automationhelpers;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
+
 import org.nuxeo.ecm.automation.context.ContextHelper;
+import org.nuxeo.ecm.core.api.Blob;
 import org.nuxeo.ecm.core.api.NuxeoPrincipal;
 import org.nuxeo.ecm.platform.usermanager.UserManager;
 import org.nuxeo.runtime.api.Framework;
 import org.nuxeo.runtime.transaction.TransactionHelper;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Base64;
 
 /**
  * A set of Automation functions to handle misc utilities, small functions
@@ -44,7 +52,7 @@ public class NxLabs implements ContextHelper {
      * @param path
      * @return the file extension
      * @throws IOException
-     * @since 2021.27
+     *
      */
     public String getFileExtension(String path) {
         
@@ -61,7 +69,7 @@ public class NxLabs implements ContextHelper {
      * @param path
      * @return the file extension
      * @throws IOException
-     * @since 2021.27
+     *
      */
     public String getBaseName(String path) {
         
@@ -74,7 +82,7 @@ public class NxLabs implements ContextHelper {
      * 
      * @param userId
      * @return the user full name
-     * @since 2021.27
+     *
      */
     public String getUserFullName(String userId) {
         
@@ -110,7 +118,6 @@ public class NxLabs implements ContextHelper {
      * Commit current transaction, starts a new one.
      * Useful in a loop, when modifying/saving a lot of documents.
      * 
-     * @since 2021.27
      */
     public void commitAndStartTransaction() {
         TransactionHelper.commitOrRollbackTransaction();
@@ -122,10 +129,65 @@ public class NxLabs implements ContextHelper {
      * 
      * @param ms
      * @throws InterruptedException
-     * @since 2023.5
+     *
      */
     public void threadSleep (long ms) throws InterruptedException {
         Thread.sleep(ms);
+    }
+    
+    /**
+     * Return the MD5 hash of a blob
+     * 
+     * @param blob
+     * @return
+     * @throws IOException
+     *
+     * @since 2023.18
+     */
+    public String md5(Blob blob) throws IOException {
+        
+        if(blob == null) {
+            return "";
+        }
+        
+        InputStream in = blob.getStream();
+        return DigestUtils.md5Hex(in);
+    }
+
+    /**
+     * Return the base64 encoding of a blob
+     * 
+     * @param blob
+     * @return
+     * @throws IOException
+     *
+     * @since 2023.18
+     */
+    public String base64(Blob blob) throws IOException {
+        
+        if(blob == null) {
+            return "";
+        }
+        
+        return Base64.getEncoder().encodeToString(blob.getByteArray());
+    }
+    
+    /**
+     * Return the base64 encoding of a String
+     * 
+     * @param blob
+     * @return
+     * @throws IOException
+     *
+     * @since 2023.18
+     */
+    public String base64(String str) {
+        
+        if(str == null) {
+            return "";
+        }
+        
+        return Base64.getEncoder().encodeToString(str.getBytes());
     }
 
 }

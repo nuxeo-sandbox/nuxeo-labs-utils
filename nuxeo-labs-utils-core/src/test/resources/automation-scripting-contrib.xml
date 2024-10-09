@@ -41,6 +41,45 @@
          }
        </script>
     </scriptedOperation>
+    
+    <scriptedOperation id="TestHelpers.GetMD5">
+       <inputType>blob</inputType>
+       <outputType>string</outputType>
+       <category>Scripting</category>
+       <param name="userId" type="string"/>
+
+       <script>
+         function run(input, params) {
+           return NxLabs.md5(input);
+         }
+       </script>
+    </scriptedOperation>
+    
+    <scriptedOperation id="TestHelpers.GetBase64Blob">
+       <inputType>blob</inputType>
+       <outputType>string</outputType>
+       <category>Scripting</category>
+       <param name="userId" type="string"/>
+
+       <script>
+         function run(input, params) {
+           return NxLabs.base64(input);
+         }
+       </script>
+    </scriptedOperation>
+    
+    <scriptedOperation id="TestHelpers.GetBase64String">
+       <inputType>string</inputType>
+       <outputType>string</outputType>
+       <category>Scripting</category>
+       <param name="userId" type="string"/>
+
+       <script>
+         function run(input, params) {
+           return NxLabs.base64(input);
+         }
+       </script>
+    </scriptedOperation>
 
   </extension>
 
