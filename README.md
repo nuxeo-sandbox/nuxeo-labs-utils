@@ -186,6 +186,8 @@ function run(input, params) {
   * Parameter
     * `digest`: String, the MD5 digest to test. If input is passed, the parameter is ignored.
   * The operation checks if the blob exists in the BinaryManager (BinaryManagers if there are more than one). If yes, return the digest, else return `null`.
+  * Notice: This operation originaly was provided in the [nuxeo-binary-verification plugin](https://github.com/nuxeo-sandbox/nuxeo-binary-verification)
+
 
 ## Operations on Documents
 * `Document > Labs.DocumentGetThumbnail`
