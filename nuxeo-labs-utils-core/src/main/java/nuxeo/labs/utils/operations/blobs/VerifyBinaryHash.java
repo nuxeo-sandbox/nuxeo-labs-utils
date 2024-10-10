@@ -21,6 +21,7 @@ package nuxeo.labs.utils.operations.blobs;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.commons.codec.digest.DigestUtils;
@@ -36,6 +37,7 @@ import org.nuxeo.ecm.core.blob.BlobManager;
 import org.nuxeo.ecm.core.blob.BlobProvider;
 import org.nuxeo.ecm.core.blob.binary.Binary;
 import org.nuxeo.ecm.core.blob.binary.BinaryManager;
+import org.nuxeo.ecm.core.blob.binary.LazyBinary;
 import org.nuxeo.runtime.api.Framework;
 
 /**
@@ -56,6 +58,9 @@ public class VerifyBinaryHash {
 
     @Param(name = "digest", required = false)
     protected String digest;
+
+    @Param(name = "provider", required = false)
+    protected String provider;
 
     @OperationMethod
     public String run(Blob blob) throws IOException {
@@ -78,17 +83,37 @@ public class VerifyBinaryHash {
         }
         
         BlobManager mgr = Framework.getService(BlobManager.class);
-        for (Entry<String, BlobProvider> prov : mgr.getBlobProviders().entrySet()) {
+        Map<String, BlobProvider> providers = mgr.getBlobProviders();
+        if (provider != null) {
+          BlobProvider bp = providers.get(provider);
+          BinaryManager bmgr = bp.getBinaryManager();
+          if (bmgr != null) {
+            return checkDigest(bmgr);
+          }
+        } else {
+          for (Entry<String, BlobProvider> prov : providers.entrySet()) {
             BlobProvider bp = prov.getValue();
             BinaryManager bmgr = bp.getBinaryManager();
             if (bmgr == null) {
-                continue;
+              continue;
             }
-            Binary bin = bmgr.getBinary(digest);
-            if (bin != null) {
-                return digest;
-            }
+            return checkDigest(bmgr);
+          }
         }
+        
         return null;
+    }
+
+    private String checkDigest(BinaryManager bmgr) {
+      Binary bin = bmgr.getBinary(digest);
+      if (bin != null) {
+        if (bin instanceof LazyBinary) {
+          if (((LazyBinary) bin).getFile() != null) {
+            return digest;
+          }
+        }
+        return digest;
+      }
+      return null;
     }
 }

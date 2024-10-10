@@ -183,9 +183,10 @@ function run(input, params) {
 * `Files > Labs.VerifyBinaryHash`
   * Return a `string`, the digest of the blob if it exists in the BinaryStore. Else, returns `null`
   * Input: `blob`, optional (if not passed, the `digest` parameter is required)
-  * Parameter
+  * Parameters
     * `digest`: String, the MD5 digest to test. If input is passed, the parameter is ignored.
-  * The operation checks if the blob exists in the BinaryManager (BinaryManagers if there are more than one). If yes, return the digest, else return `null`.
+    * `provider`: String, optional. The blob provider in which to test the digest. If not passed, the operation loops on all the providers.
+  * The operation checks if the blob exists in the BinaryManager (BinaryManagers if there are more than one and `provider` is not passed). If yes, return the digest, else return `null`.
   * Notice: This operation originaly was provided in the [nuxeo-binary-verification plugin](https://github.com/nuxeo-sandbox/nuxeo-binary-verification)
 
 
