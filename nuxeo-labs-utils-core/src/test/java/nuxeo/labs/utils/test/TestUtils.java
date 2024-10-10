@@ -39,6 +39,10 @@ import org.nuxeo.runtime.test.runner.TransactionalFeature;
 public class TestUtils {
 
     public static final String TEST_IMAGE_FILE = "files/Desert.jpg";
+    
+    public static final String TEST_IMAGE_MIME_TYPE = "image/jpeg";
+    
+    public static final String TEST_IMAGE_MD5 = "ba45c8f60456a672e003a875e469d0eb";
 
     public static Blob createBlobFromTestImage() throws IOException {
         File f = FileUtils.getResourceFileFromContext(TEST_IMAGE_FILE);

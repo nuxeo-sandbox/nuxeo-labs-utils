@@ -17,6 +17,7 @@
     <operation class="nuxeo.labs.utils.operations.videos.VideoRemoveFromTranscodedVideos" />
     <!--  Blobs -->
     <operation class="nuxeo.labs.utils.operations.blobs.BlobGetMimeType" />
+    <operation class="nuxeo.labs.utils.operations.blobs.VerifyBinaryHash" />
     <!--  Documents -->
     <operation class="nuxeo.labs.utils.operations.documents.DocumentGetThumbnail" />
   </extension>

@@ -21,6 +21,7 @@ This plugin contains miscellaneous utilities, mainly operations. The original go
     * Document > Labs.VideoRemoveFromTranscodedVideos
   * Operations on Blobs
     * Conversion > Labs.BlobGetMimeType
+    * Files > Labs.VerifyBinaryHash
   * Operations on Documents
     * Document > Labs.DocumentGetThumbnail
   * Misc. Operations
@@ -179,6 +180,12 @@ function run(input, params) {
   * ⚠️ Notice this call can be costly, the input blob temporarily duplicated on disk, etc. => we recommend using it only when you have a blob with no mime-type (which can happens sometimes after custom conversion for example)
   * (This is a simple wrapper for `org.nuxeo.ecm.platform.mimetype.interfaces.MimetypeRegistry#getMimetypeFromBlob`)
 
+* `Files > Labs.VerifyBinaryHash`
+  * Return a `string`, the digest of the blob if it exists in the BinaryStore. Else, returns `null`
+  * Input: `blob`, optional (if not passed, the `digest` parameter is required)
+  * Parameter
+    * `digest`: String, the MD5 digest to test. If input is passed, the parameter is ignored.
+  * The operation checks if the blob exists in the BinaryManager (BinaryManagers if there are more than one). If yes, return the digest, else return `null`.
 
 ## Operations on Documents
 * `Document > Labs.DocumentGetThumbnail`
