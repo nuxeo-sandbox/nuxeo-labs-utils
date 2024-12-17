@@ -24,7 +24,7 @@ import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
+import jakarta.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
